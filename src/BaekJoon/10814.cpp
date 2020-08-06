@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+
 int main()
 {
 	int N;
