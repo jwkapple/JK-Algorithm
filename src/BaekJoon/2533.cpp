@@ -6,7 +6,7 @@ void Init()
 	std::ios_base::sync_with_stdio(false);
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
-
+ 
 const int MAX = 1e6 + 2;
 
 std::vector<int> child[MAX];
@@ -34,20 +34,20 @@ bool func(int cur)
 }
 
 int main()
-{
+{	
 	Init();
-
-	std::cin >> N;
-
-	int from, to;
-	for (int i = 0; i < N - 1; ++i)
-	{
-		std::cin >> from >> to;
+	
+	std::cin >> N;	 
+	
+	int from, to;	
+	for (int i = 0; i < N - 1; ++i)	 
+	{		 
+		std::cin >> from >> to;	
 
 		child[from].push_back(to);
 		child[to].push_back(from);
 	}
-
+	
 	func(1);
 
 	std::cout << result;
