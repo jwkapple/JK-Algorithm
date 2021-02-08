@@ -13,7 +13,7 @@ int main() {
 	std::string str_buf;
 	std::fstream fs;
 
-	fs.open("양산시.csv", std::ios::in);
+	fs.open("진주시.csv", std::ios::in);
 
 	while (str_buf != cut)
 	{
@@ -22,7 +22,6 @@ int main() {
 
 	std::getline(fs, str_buf);
 	int total = 0;
-
 
 	while (!fs.eof()) {
 
@@ -37,13 +36,13 @@ int main() {
 			getline(fs, str_buf, ',');
 
 		}
+
 		std::cout << str_buf << " "; num = str_buf;
 
 		for (int i = 0; i < 3; ++i) { getline(fs, str_buf, ','); }
 		std::cout << str_buf << "\n"; cnt = str_buf;
 
 		std::getline(fs, str_buf);
-
 
 		bool find = false;
 		if (cnt == "여" && num == "1지류")
@@ -55,7 +54,6 @@ int main() {
 
 			if (!find) { data.push_back(pii(name, 1)); }
 		}
-
 	}
 
 	for (int i = 0; i < data.size(); ++i)
