@@ -1,6 +1,6 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
-#include <queue>
 
 void Init()
 {
@@ -10,66 +10,69 @@ void Init()
 
 const int MAX = 1e4 + 1;
 
-std::priority_queue<int, std::vector<int>, std::greater<int>> result;
-std::vector<int> data[MAX];
+std::vector<int> path[MAX];
+bool cutEdge[MAX];
 int nodeNum[MAX];
-int node[MAX];
-int V, E, current = 1;
+int V, E, size = 0, current = 1;
 
-void DFS(int num)
+int DFS(int num, bool isRoot)
 {
-	if (nodeNum[num]) return;
 	nodeNum[num] = current++;
-	node[nodeNum[num]] = num;
-	auto cur = data[num];
 
-	for (auto p : cur)
+	int value = nodeNum[num];
+	int child = 0;
+
+	for (auto p : path[num])
 	{
-		DFS(p);
-	}
-}
-
-bool check(int num)
-{
-	for (int i = num; i <= V; ++i)
-	{
-		auto cur = data[node[i]];
-
-		for (auto p : cur)
+		if (!nodeNum[p])
 		{
-			if (nodeNum[p] > num) return false;
+			child++;
+			int tmp = DFS(p, 0);
+
+			if (!isRoot && tmp >= nodeNum[num])
+			{
+				cutEdge[num] = true;
+			}
+			value = std::min(value, tmp);
 		}
+		else value = std::min(value, nodeNum[p]);
 	}
 
-	return true;
-}
+	if (isRoot && child > 1)
+	{
+		cutEdge[num] = true;
+	}
 
+	return value;
+}
 int main()
 {
 	Init();
 
 	std::cin >> V >> E;
 
-	int from, to;
+	int A, B;
 	for (int i = 0; i < E; ++i)
 	{
-		std::cin >> from >> to;
-		data[from].push_back(to);
-		data[to].push_back(from);
+		std::cin >> A >> B;
+
+		path[A].push_back(B);
+		path[B].push_back(A);
 	}
 
-	DFS(1);
-
-	if (data[1].size() >= 2) result.push(1);
-	for (int i = 2; i < V; ++i)
+	for (int i = 1; i <= V; ++i)
 	{
-		if (check(i)) result.push(node[i]);
+		if (!nodeNum[i]) DFS(i, 1);
 	}
 
-	std::cout << result.size() << "\n";
-	while (!result.empty())
+	for (int i = 1; i <= V; ++i)
 	{
-		std::cout << result.top() << " ";
-		result.pop();
+		if (cutEdge[i]) size++;
+	}
+	std::cout << size << "\n";
+
+	for (int i = 1; i <= V; ++i)
+	{
+		if (cutEdge[i]) std::cout << i << " ";
 	}
 }
