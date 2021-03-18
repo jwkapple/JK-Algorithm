@@ -17,9 +17,9 @@ int dir[4][2]{ {-1,0},{1,0},{0,-1},{0,1} };
 int map[MAX][MAX], data[MAX][MAX], visited[MAX][MAX];
 int N, result = 1e6 + 1;
 
-void dfs(int x, int y, int cnt)
+void dfs(int y, int x, int cnt)
 {
-	visited[x][y] = cnt;
+	visited[y][x] = cnt;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -27,9 +27,9 @@ void dfs(int x, int y, int cnt)
 		int X = x + dir[i][1];
 		if (X >= 0 && Y >= 0 && X < N && Y < N)
 		{
-			if (visited[X][Y] == 0 && map[X][Y])
+			if (!visited[X][Y] && map[X][Y])
 			{
-				dfs(X, Y, cnt);
+				dfs(Y, X, cnt);
 			}
 		}
 	}
@@ -40,28 +40,25 @@ int main(void)
 	std::cin >> N;
 
 	for (int y = 0; y < N; ++y)
-	{
-		for (int x = 0; x < N; ++x) { std::cin >> map[y][x]; }
-	}
-			
+		for (int x = 0; x < N; ++x)
+			std::cin >> map[y][x];
 
 	int cnt = 0;
 	for (int y = 0; y < N; ++y)
 	{
 		for (int x = 0; x < N; ++x)
 		{
-			if (!visited[y][x] && map[y][x]) // 육지이고 아직 방문하지 않은 경우
+			if (!visited[y][x] && map[y][x])
 			{
-				dfs(y, x, ++cnt); // 각 육지에 번호를 붙임
+				dfs(y, x, ++cnt);
 			}
 		}
 	}
 
-	for (int k = 1; k <= cnt; k++)
+	for (int k = 1; k <= cnt; ++k)
 	{
 		std::queue<pii> Q;
 		for (int y = 0; y < N; ++y)
-		{
 			for (int x = 0; x < N; ++x)
 			{
 				data[y][x] = -1;
@@ -71,7 +68,6 @@ int main(void)
 					data[y][x] = 0;
 				}
 			}
-		}
 
 		while (!Q.empty())
 		{
@@ -94,16 +90,15 @@ int main(void)
 		}
 
 		for (int y = 0; y < N; ++y)
-		{
 			for (int x = 0; x < N; ++x)
 			{
-				if (visited[y][x] != k && !visited[y][x])
+				if (visited[y][x] != k && visited[y][x])
 				{
-					if (data[y][x] - 1 < result) result = data[y][x] - 1;
+					if (data[y][x] - 1 < result)
+						result = data[y][x] - 1;
 				}
 
 			}
-		}
 	}
 
 	std::cout << result << "\n";
