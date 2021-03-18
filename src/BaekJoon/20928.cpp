@@ -16,7 +16,7 @@ std::vector<pii> data;
 bool state;
 int N, M, cur = 0, current = 0, result = 0;
 
-int main()
+int main() 
 {
 	Init();
 
@@ -63,7 +63,7 @@ int main()
 				state = true;
 				break;
 			}
-		}
+		} 
 	}
 
 	if (state) std::cout << -1;
