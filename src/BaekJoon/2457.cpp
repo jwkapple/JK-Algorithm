@@ -1,94 +1,52 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <queue>
 
+#define pii std::pair<int, int>
 void Init()
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-struct Node
-{
-	int SM;
-	int SD;
-	int EM;
-	int ED;
-
-	Node(int x, int y, int X, int Y) : SM(x), SD(y), EM(X), ED(Y) {}
-};
-
-bool check(int cM, int cD, int M, int D) // true : latter is bigger
-{
-	if (cM < M) return true;
-	else
-	{
-		if (cD < D) return true;
-	}
-
-	return false;
-}
-bool operator<(Node left, Node right)
-{
-	if (left.SM == right.SM)
-	{
-		return left.SD < right.SD;
-	}
-	else
-	{
-		return left.SM < right.SM;
-	}
-}
-
-std::vector<Node> data;
+std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
+int right = 301;
 int N, result = 0;
-
 int main()
 {
-	Init();
 
+    Init();
 
-	std::cin >> N;
+    std::cin >> N;
 
-	int a, b, c, d;
-	for (int i = 0; i < N; ++i)
-	{
-		std::cin >> a >> b >> c >> d;
+    int lM, mD, rM, rD;
+    for (int i = 0; i < N; ++i)
+    {
+        std::cin >> lM >> mD >> rM >> rD;
+        Q.push(pii(lM * 100 + mD, rM * 100 + rD));
+    }
 
-		data.push_back(Node(a, b, c, d));
-	}
+    Q.push(pii(2000, 2000));
+    int R = 0;
+    while (!Q.empty())
+    {
+        auto [from, to] = Q.top();
 
-	std::sort(data.begin(), data.end());
+        if (from >= right)
+        {
+            result++;
+            right = R;
 
-	int num = 0;
-	int month = 3; int day = 1;
-	int cM = 0, cD = 0;
-	bool done = false;
+            if (right > 1130) break;
 
-	while (num < data.size())
-	{
-		auto[sM, sD, eM, eD] = data[num];
+            continue;
+        }
 
-		if (!check(month, day, sM, sD)) // current point is latter
-		{
-			if (check(cM, cD, eM, eD)) // current date is sooner
-			{
-				cM = eM, cD = eD;
-			}
+        Q.pop();
+        R = R > to ? R : to;
 
-			num++;
-		}
-		else
-		{
-			month = cM, day = cD;
-			if (!month && !day) break;
-			cM = 0, cD = 0;
-			result++;
-		}
+    }
 
-		if (cM >= 12) { result++; done = true; break; }
-	}
-
-	if (done && cM == 12) std::cout << result;
-	else std::cout << 0;
+    if (!right) std::cout << 0;
+    else  std::cout << result;
 }
