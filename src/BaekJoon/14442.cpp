@@ -81,4 +81,4 @@ int main()
 
 	if (!result) std::cout << -1;
 	else std::cout << result;
-}
+} 
