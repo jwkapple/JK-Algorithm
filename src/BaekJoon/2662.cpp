@@ -1,53 +1,56 @@
 #include <iostream>
-#include <algorithm>
 
 void Init()
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
 const int MAX = 300 + 1;
 
-int N, M, d[21][MAX], e[21][MAX], v[21][MAX], i, j, k, s, a[21];
+int max[MAX][MAX];
+int data[MAX][MAX];
+int result[MAX][MAX];
+int N, M;
 
+void func(int n, int m)
+{
+    if (!m) return;
+
+    func(n - 1, result[n][m]);
+    std::cout << m - data[n][result[n][m]] << "\n";
+}
 int main()
 {
-	std::cin >> N >> M;
+    Init();
 
-	int tmp;
-	for (i = 1;i <= N;++i)
-	{
-		std::cin >> tmp;
-		for (j = 1;j <= M;++j)
-		{
-			std::cin >> d[j][i];
-		}
-	}
+    std::cin >> N >> M;
 
-	for (i = 1;i <= M;i++)
-	{
-		for (j = 1;j <= N;j++)
-		{
-			for (k = 0;k <= j;k++)
-			{
-				if (e[i][j] < e[i - 1][j - k] + d[i][k])
-				{
-					e[i][j] = e[i - 1][j - k] + d[i][k];
-					v[i][j] = k;
-				}
-			}
-		}
-	}
+    int tmp;
+    for (int i = 1; i <= N; ++i)
+    {
+        std::cin >> tmp;
+        for (int j = 0; j <= M; ++j)
+        {
+            std::cin >> data[j][i];
+        }
+    }
 
-	std::cout << e[M][N] << "\n";
-	for (j = N, i = M;i;--i)
-	{
-		a[i] = v[i][j];
-		j -= v[i][j];
-	}
-	for (i = 1;i <= M; ++i)
-	{
-		std::cout << a[i];
-	}
+    for (int i = 1; i <= M; ++i)
+    {
+        for (int j = N; j >= 1; --j)
+        {
+            for (int k = 0; k <= j; ++k)
+            {
+                if (max[i][j] < max[i - 1][j - k] + data[i][k])
+                {
+                    max[i][j] = max[i - 1][j - k] + data[i][k];
+                    result[i][j] = j - k;
+                }
+            }
+        }
+    }
+
+    std::cout << max[M][N] << "\n";
+    func(M, N);
 }
