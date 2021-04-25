@@ -35,6 +35,7 @@ int main()
 	data[0] = 1e9;
 
 	int tmp;
+
 	for (int i = 1; i <= D; ++i)
 	{
 		std::cin >> tmp;
