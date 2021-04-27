@@ -13,7 +13,7 @@ void Init()
 const int MAX = 1e4 + 1;
 
 std::vector<pii> max[MAX];
-int data[MAX][7], dice[MAX][7], tmp[MAX], tmp2[MAX];
+int data[MAX][7], dice[MAX][7];
 int N, result = 0, no1, no2;
 
 int func(int face, int num)
@@ -24,7 +24,6 @@ int func(int face, int num)
 
 	face = dice[num][face];
 
-	tmp2[num] = face;
 	switch (face)
 	{
 	case 1: no1 = 1, no2 = 6; break;
@@ -44,7 +43,6 @@ int func(int face, int num)
 		cur = v; break;
 	}
 
-	tmp[num] = cur;
 	return cur + func(data[num][no2], num + 1);
 }
 
