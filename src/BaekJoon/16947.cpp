@@ -28,8 +28,7 @@ int DFS(int num, int prev)
 		if (p == prev) continue;
 
 		int cur = DFS(p, num);
-		if (cur == -1) continue;
-		else
+		if (cur != -1)
 		{
 			if (num == cur) return -1;
 			else return cur;
@@ -87,13 +86,9 @@ int main()
 
 	for (int i = 1; i <= N; ++i)
 	{
-		if (visited[i]) { result[i] = 0; continue; }
-
+		if (visited[i]) result[i] = 0;
 		else result[i] = BFS(i);
 	}
 
-	for (int i = 1; i <= N; ++i)
-	{
-		std::cout << result[i] << " ";
-	}
+	for (int i = 1; i <= N; ++i) { std::cout << result[i] << " "; }
 }
