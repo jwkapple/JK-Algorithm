@@ -1,12 +1,11 @@
 #include <iostream>
 
 const int MAX = 17;
-
 int dir[8][2]{ {1,0}, {-1,0}, {0,1}, {0,-1}, {1,1},{1,-1},{-1,1},{-1,-1} };
+
 int board[MAX][MAX];
 
-int result = 0;
-int N;
+int N, result = 0;
 
 void Fill(int x, int y, bool side)
 {
@@ -29,11 +28,8 @@ void Fill(int x, int y, bool side)
 				if (side) board[x][y]++;
 				else board[x][y]--;
 			}
-
 		}
-
 	}
-
 }
 
 void back(int line)
@@ -60,6 +56,5 @@ int main()
 	std::cin >> N;
 
 	back(1);
-
 	std::cout << result;
 }
