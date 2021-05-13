@@ -10,21 +10,10 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-struct Node
-{
-	int V;
-	int Prev;
-	int Cur;
-
-	Node(int v, int p, int c) : V(v), Prev(p), Cur(c) {};
-};
-
-bool operator<(Node L, Node R) { return L.V < R.V; }
-
-const int MAX = 1e5 + 1;
+const int MAX = 1e4 + 1;
 
 std::vector<pii> map[MAX];
-std::priority_queue<Node> Q;
+std::priority_queue<pii> Q;
 
 int dij[MAX];
 int N, M, A, B, result = 0;
@@ -46,29 +35,30 @@ int main()
 
 	std::cin >> A >> B;
 
-	Q.push(Node(1e9, 0, A));
+	Q.push(pii(1e9, A));
 
 	while (!Q.empty())
 	{
-		auto[v, prev, cur] = Q.top(); Q.pop();
+		auto[v, cur] = Q.top(); Q.pop();
+
+		if (v <= dij[cur]) continue;
 
 		if (cur == B)
 		{
 			result = v;
 			break;
 		}
-		if (v <= dij[cur]) continue;
 
 		dij[cur] = v;
 
 		for (auto p : map[cur])
 		{
 			auto[nValue, next] = p;
-			if (next == prev) continue;
 
 			nValue = nValue > v ? v : nValue;
 
-			Q.push(Node(nValue, cur, next));
+			if (nValue <= dij[next]) continue;
+			Q.push(pii(nValue, next));
 		}
 	}
 
