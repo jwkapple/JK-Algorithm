@@ -1,6 +1,5 @@
 #include <iostream>
 
-#define ll long long
 #define pii std::pair<int, int>
 
 void Init()
@@ -13,31 +12,34 @@ int dir[3][2]{ {1,0},{1, 1}, {0, 1} };
 enum Case { DOWN, DIAGONAL, RIGHT };
 const int MAX = 1500 + 1;
 
-ll DP[MAX][MAX];
+int DP[MAX][MAX];
 pii map[MAX][MAX];
 int R, C;
-ll result = 0;
+int result = 0;
 
-ll get(int y, int x)
+int get(int y, int x)
 {
-	ll A = map[R][x].first - map[y][x].first;
-	ll B = map[y - 1][x].second;
+	int A = map[R][x].first - map[y][x].first;
+	int B = map[y - 1][x].second;
 
 	return A + B;
 }
 
-ll func(int y, int x)
+int func(int y, int x)
 {
 	auto& ret = DP[y][x];
 	if (ret) return ret;
 
 	if (x == C && y == R) return ret = map[R - 1][C].second;
 
-	ll max = 0, value = 0;
+	int max = 0, value = 0, Y, X;
 	bool isBottom = y == R;
 	bool isCorner = x == C;
 	for (int i = 0; i < 3; ++i)
 	{
+		Y = y + dir[i][0];
+		X = x + dir[i][1];
+
 		if (isBottom)
 		{
 			if (i == DIAGONAL || i == DOWN) continue;
@@ -47,22 +49,18 @@ ll func(int y, int x)
 			if (i == DIAGONAL || i == RIGHT) continue;
 		}
 
-		if (i == DIAGONAL || i == RIGHT)
+		if (i == DOWN)
 		{
-			value = get(y, x) + func(y + dir[i][0], x + dir[i][1]);
-			max = value > max ? value : max;
+			int current = map[y][x].second - map[y - 1][x].second;
+			value = func(Y, X) - current;
 		}
-		else
-		{
-			ll current = map[y][x].second - map[y - 1][x].second;
-			value = func(y + dir[i][0], x + dir[i][1]) - current;
-
-			max = value > max ? value : max;
-		}
+		else value = get(y, x) + func(Y, X);
+		max = value > max ? value : max;
 	}
 
 	return ret = max;
 }
+
 int main()
 {
 	Init();
@@ -84,7 +82,6 @@ int main()
 			else map[y][x] = pii(pA, pB + tmp);
 		}
 	}
-
 
 	std::cout << func(1, 1);
 }
