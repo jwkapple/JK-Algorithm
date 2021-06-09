@@ -47,6 +47,7 @@ int main()
 			tA = a > b ? a - b : a + a;
 			tB = a > b ? b + b : b - a;
 
+			if (tA < 0 || tB < 0) continue;
 			if (!visited[tA][tB]) Q.push(pii(tA, tB));
 		}
 
@@ -54,6 +55,7 @@ int main()
 		{
 			tB = c > b ? b + b : b - c;
 
+			if (tB < 0) continue;
 			if (!visited[a][tB])Q.push(pii(a, tB));
 		}
 
@@ -61,6 +63,7 @@ int main()
 		{
 			tA = a > c ? a - c : a + a;
 
+			if (tA < 0) continue;
 			if (!visited[tA][b]) Q.push(pii(tA, b));
 		}
 	}
