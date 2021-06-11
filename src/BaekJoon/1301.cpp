@@ -42,6 +42,7 @@ ll func(int a, int b)
 int main()
 {
 	Init();
+
 	std::cin >> N;
 
 	for (int i = 0;i < N;i++) { std::cin >> data[i]; }
@@ -61,6 +62,5 @@ int main()
 			}
 		}
 	}
-
 	std::cout << result;
 }
