@@ -11,37 +11,21 @@ const int MAX = 1000 + 1;
 int data[MAX], DP[MAX], GDP[MAX][MAX];
 int N;
 
-int gap(int from, int to)
+void gap()
 {
-	if (from == to) return 0;
-
-	auto& ret = GDP[from][to];
-	if (ret) return ret;
-
-	int min = 1e9, max = 0;
-
-	for (int i = from; i <= to; ++i)
+	int max, min;
+	for (int i = 0; i < N; ++i)
 	{
-		min = min > data[i] ? data[i] : min;
-		max = max > data[i] ? max : data[i];
+		max = data[i];
+		min = data[i];
+
+		for (int j = i; j < N; ++j)
+		{
+			min = min > data[j] ? data[j] : min;
+			max = max > data[j] ? max : data[j];
+			GDP[i][j] = max - min;
+		}
 	}
-
-	return ret = max - min;
-}
-int func(int from)
-{
-	if (from == N) return 0;
-	auto& ret = DP[from];
-	if (ret) return ret;
-
-	int cur;
-	for (int i = 1; from + i <= N; ++i)
-	{
-		cur = func(from + i) + gap(from, from + i - 1);
-		ret = ret > cur ? ret : cur;
-	}
-
-	return ret;
 }
 
 int main()
@@ -55,5 +39,16 @@ int main()
 		std::cin >> data[i];
 	}
 
-	std::cout << func(0);
+	gap();
+
+	for (int i = 0; i < N; ++i)
+	{
+		for (int j = 0; j <= i; ++j)
+		{
+			if (!j) DP[i] = DP[i] > GDP[j][i] ? DP[i] : GDP[j][i];
+			else DP[i] = DP[i] > DP[j] + GDP[j + 1][i] ? DP[i] : DP[j] + GDP[j + 1][i];
+		}
+	}
+
+	std::cout << DP[N - 1];
 }
