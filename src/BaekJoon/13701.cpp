@@ -1,5 +1,5 @@
 #include <iostream>
-#include <bitset>
+#include <algorithm>
 
 void Init()
 {
@@ -7,22 +7,21 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-const int MAX = 1 << 25;
+const int MAX = 2000 + 1;
 
-std::bitset<MAX> data;
+int data[MAX];
 int N;
 
 int main()
 {
-
 	Init();
+	
+	std::cin >> N;
 
-	while (scanf("%d", &N) != EOF)
+	for (int i = 0; i < N; ++i)
 	{
-		if (!data[N])
-		{
-			data[N] = 1;
-			printf("%d", N);
-		}
+		std::cin >> data[i];
 	}
+
+	std::sort(data, data + N - 1);
 }
