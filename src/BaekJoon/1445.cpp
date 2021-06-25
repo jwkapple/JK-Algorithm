@@ -104,7 +104,7 @@ int main()
 
 			if (Y > 0 && Y <= N && X > 0 && X <= M)
 			{
-				Q.push(Node(v, Y, X));
+				if (dij[Y][X] > v)	Q.push(Node(v, Y, X));
 			}
 		}
 	}
