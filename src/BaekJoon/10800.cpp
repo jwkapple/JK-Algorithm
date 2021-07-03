@@ -1,7 +1,8 @@
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
-#define pii std::pair<int, int>
+#define ll long long
 
 void Init()
 {
@@ -18,11 +19,12 @@ struct Node
     Node() {};
     Node(int c, int v, int n) : Color(c), Value(v), Num(n) {};
 };
-const int MAX = 2e5 + 1;
 
-pii DP[MAX]; // latest, value
+const int MAX = 2e5 + 2;
+
 Node data[MAX];
-int result[MAX];
+std::queue<pii> Q;
+ll result[MAX], DP[MAX];
 int N;
 
 int main()
@@ -39,31 +41,25 @@ int main()
         data[i] = Node(c, v, i);
     }
 
-    std::sort(data, data + N + 1, [](Node L, Node R) { return L.Value < R.Value; });
+    std::sort(data + 1, data + N + 1, [](Node L, Node R)
+    { if (L.Value == R.Value) return L.Color < R.Color;
+    return L.Value < R.Value;
+    });
 
-    int cur, tot;
+    ll tot = 0;
+    int prev = -1;
     for (int i = 1; i <= N; ++i)
     {
         auto [color, value, num] = data[i];
-        tot = 0;
 
-        if (DP[color].first)
+        if (prev != value)
         {
-            cur = DP[i].first;
-            tot += DP[i].second;
-        }
-        else cur = 0;
-
-        for (int j = cur; j < i; ++j)
-        {
-            auto [nColor, nValue, nNum] = data[j];
-            if (nColor == color) continue;
-
-            tot += nValue;
+            prev = value;
+            result[num] = tot - DP[color];
         }
 
-        DP[color] = pii(i, tot);
-        result[num] = tot;
+        DP[color] += value;
+        tot += value;
     }
 
     for (int i = 1; i <= N; ++i)
