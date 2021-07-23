@@ -1,7 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
-
+#include <vector>
 #define pii std::pair<int, int>
 
 void Init()
@@ -10,43 +9,50 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-std::vector<pii> jewery;
-int dp[101][100000 + 1];
+const int MAX = 1e5 + 1;
+std::vector<pii> data;
+int L[MAX], R[MAX];
+int N, K;
 
-int N, K, result = 0;
-
-int func(int J, int W)
-{
-	if (jewery[J].first > W) return dp[J - 1][W];
-	else
-	{
-		return std::max(jewery[J].second + dp[J - 1][W - jewery[J].first], dp[J - 1][W]);
-	}
-}
 int main()
 {
 	Init();
 
 	std::cin >> N >> K;
 
-	uint32_t w, v;
-	for (int i = 0; i < N; ++i)
+	data.push_back(pii(0, 0));
+	int W, V;
+	for (int i = 1; i <= N; ++i)
 	{
-		std::cin >> w >> v;
-
-		jewery.push_back(std::make_pair(w, v));
+		std::cin >> W >> V;
+		data.push_back(pii(W, V));
 	}
 
-	jewery.push_back(std::make_pair(0, 0));
-	std::sort(jewery.begin(), jewery.end());
+	std::sort(data.begin(), data.end());
 
+	int l, r;
+	int* left;
+	int* right;
 	for (int y = 1; y <= N; ++y)
 	{
+		if (y % 2) { left = L, right = R; }
+		else { left = R, right = L; }
+
+		auto[weight, value] = data[y];
+
 		for (int x = 1; x <= K; ++x)
 		{
-			dp[y][x] = func(y, x);
+			if (x < weight) left[x] = right[x];
+			else
+			{
+				l = right[x - weight] + value;
+				r = right[x];
+
+				left[x] = l > r ? l : r;
+			}
 		}
 	}
 
-	std::cout << dp[N][K];
+	if (N % 2) std::cout << L[K];
+	else std::cout << R[K];
 }
