@@ -9,12 +9,12 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-const int MAX = 4e3 + 1;
+const int MAX = 1e3 + 1;
 
 std::queue<pii> data; // value, clipboard
 bool visited[MAX][MAX];
 
-int S, T, C = -1, result = 0;
+int S, T, C = -1, result = 0, max = 1e9;
 
 int main()
 {
@@ -31,13 +31,21 @@ int main()
 		for (int i = 0; i < size; ++i)
 		{
 			auto[value, C] = data.front(); data.pop();
-			if (visited[value][C] || value == 0) continue;
-			visited[value][C] = true;
+
 			if (value == S) { result = T; break; }
 
-			if (value > S) data.push(pii(value - 1, C));
+			if (value > S)
+			{
+				if (max < C) continue;
+
+				max = C;
+				data.push(pii(value - 1, C));
+			}
 			else
 			{
+				if (visited[value][C] || value == 0) continue;
+				visited[value][C] = true;
+
 				if (C) data.push(pii(value + C, C));
 				if (value > 0) data.push(pii(value - 1, C));
 				data.push(pii(value, value));
