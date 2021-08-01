@@ -11,7 +11,7 @@ void Init()
 }
 
 std::vector<pii> data;
-int R, C, N, M, result;
+int R, C, N, M, max = 0;
 
 bool cover(int num)
 {
@@ -22,11 +22,12 @@ bool cover(int num)
 		if (y > num || n > N) return false;
 		if (x > v)
 		{
-			v += num;
+			v = x + num - 1;
 			n++;
 		}
 	}
 
+	if (n > N) return false;
 	return true;
 }
 int main()
@@ -43,21 +44,19 @@ int main()
 	{
 		std::cin >> y >> x;
 		data.push_back(pii(y, x));
+
+		max = max > y ? max : y;
 	}
 
-	std::sort(data.begin(), data.end(), [](pii L, pii R) {return L.second < R.second; });
+	std::sort(data.begin(), data.end(), [](pii L, pii R) { return L.second < R.second; });
 
-	int left = 1, right = R;
-	while (left <= right)
+	int left = max, right = R;
+	while (left < right)
 	{
 		int mid = (left + right) / 2;
-		if (cover(mid))
-		{
-			result = mid;
-			right = mid - 1;
-		}
+		if (cover(mid)) right = mid;
 		else left = mid + 1;
 	}
 
-	std::cout << result;
+	std::cout << left;
 }
