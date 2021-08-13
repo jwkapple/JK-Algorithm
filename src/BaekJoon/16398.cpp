@@ -1,79 +1,82 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <vector>
+
+#define ll long long
 
 void Init()
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL); std::cout.tie(NULL);
 }
+
+const int MAX = 1000 + 1;
 
 struct Node
 {
-	int From;
-	int To;
-	int V;
+    int From;
+    int To;
+    int Value;
 
-	Node(int f, int t, int v) : From(f), To(t), V(v) {};
+    Node() {};
+    Node(int f, int t, int v) : From(f), To(t), Value(v) {};
 };
 
-bool operator<(const Node& R, const Node& L) { return R.V < L.V; }
+bool operator<(Node L, Node R) { return L.Value < R.Value; }
 
-const int MAX = 1e4 + 1;
+std::vector<Node> Q;
 
-std::vector<Node> data;
 int parent[MAX];
 int N;
-long long result = 0;
+ll result = 0;
 
-int Find(int A)
+int find(int num)
 {
-	auto& cur = parent[A];
-	if (cur == -1) return A;
-	return cur = Find(parent[A]);
+    auto& p = parent[num];
+    if (num == p) return num;
+
+    return p = find(p);
 }
 
-void Union(int A, int B)
+bool merge(int A, int B)
 {
-	A = Find(A);
-	B = Find(B);
+    int pA = find(A);
+    int pB = find(B);
 
-	if (A == B) return;
+    if (pA == pB) return false;
 
-	if (A > B) parent[A] = B;
-	else parent[B] = A;
+    if (pA < pB) parent[pB] = pA;
+    else parent[pA] = pB;
+
+    return true;
 }
 
 int main()
 {
-	Init();
+    Init();
 
-	std::cin >> N;
+    std::cin >> N;
 
-	std::fill(parent + 1, parent + N + 1, -1);
+    int tmp;
+    for (int y = 1; y <= N; ++y)
+    {
+        parent[y] = y;
+        for (int x = 1; x <= N; ++x)
+        {
+            std::cin >> tmp;
 
-	int tmp;
-	for (int y = 1; y <= N; ++y)
-	{
-		for (int x = 1; x <= N; ++x)
-		{
-			std::cin >> tmp;
+            if (x <= y) continue;
 
-			if (y == x) continue;
-			data.push_back(Node(y, x, tmp));
-		}
-	}
+            Q.push_back(Node(y, x, tmp));
+        }
+    }
 
-	std::sort(data.begin(), data.end());
+    std::sort(Q.begin(), Q.end());
+    for (auto p : Q)
+    {
+        auto [y, x, v] = p;
+        if (merge(y, x)) result += v;
+    }
 
-	for (int a = 0; a < data.size(); ++a)
-	{
-		auto[y, x, v] = data[a];
-
-		if (Find(y) == Find(x)) continue;
-
-		Union(y, x);
-		result += v;
-	}
-	std::cout << result;
+    std::cout << result;
 }
