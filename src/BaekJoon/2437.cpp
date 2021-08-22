@@ -3,35 +3,33 @@
 
 void Init()
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
 const int MAX = 1001;
 
 int data[MAX];
-int N, result = 0;
+int N, cur = 0, total = 1, current;
 
 int main()
 {
-	Init();
+    Init();
 
-	std::cin >> N;
+    std::cin >> N;
 
-	for (int i = 0; i < N; ++i) std::cin >> data[i];
+    for (int i = 0; i < N; ++i) { std::cin >> data[i]; }
 
-	std::sort(data, data + N);
+    std::sort(data, data + N);
 
-	int cur = 0;
-	int max = 1;
-	while (!result)
-	{
-		int current = data[cur];
-		if (current > max) { result = max; continue; }
+    while (true)
+    {
+        current = data[cur];
+        if (current > total) break;
 
-		max += current;
-		cur++;
-	}
+        total += current;
+        cur++;
+    }
 
-	std::cout << result;
+    std::cout << total;
 }
