@@ -1,67 +1,54 @@
 #include <iostream>
 #include <vector>
-#include <queue>
+
 #define pii std::pair<int, int>
 
 void Init()
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
 const int MAX = 1e4 + 1;
 
 std::vector<pii> data[MAX];
-int N, result = 0;
+
+int N, result = 0, total, value;
 
 int func(int num)
 {
-	std::priority_queue<int> pq;
-	int ret = 0;
-	int tmp = 0;
-	auto cur = data[num];
+    if (!(data[num].size())) return 0;
 
-	int value;
-	for (int i = 0; i < cur.size(); ++i)
-	{
-		auto [path, v] = cur[i];
+    int first = 0, second = 0;
+    for (auto p : data[num])
+    {
+        auto [to, v] = p;
 
-		int value = func(path) + v;
-		pq.push(value);
+        value = v + func(to);
+        if (value > first) { second = first, first = value; continue; }
+        if (value > second) { second = value; }
+    }
 
-		tmp = tmp > value ? tmp : value;
-	}
+    total = first + second;
+    result = result > total ? result : total;
 
-	if (pq.size() == 1)
-	{
-		ret = pq.top();
-	}
-
-	if (pq.size() >= 2)
-	{
-		ret += pq.top(); pq.pop();
-		ret += pq.top();
-	}
-
-	result = result > ret ? result : ret;
-	return tmp;
+    return first;
 }
-int main() {
+int main()
+{
+    Init();
 
-	Init();
+    std::cin >> N;
 
-	std::cin >> N;
+    int from, to, v;
+    for (int i = 0; i < N - 1; ++i)
+    {
+        std::cin >> from >> to >> v;
 
-	int from, to, v;
+        data[from].push_back(pii(to, v));
+    }
 
-	for (int i = 0; i < N - 1; ++i)
-	{
-		std::cin >> from >> to >> v;
+    func(1);
 
-		data[from].push_back(pii(to, v));
-	}
-
-	func(1);
-
-	std::cout << result;
+    std::cout << result;
 }
