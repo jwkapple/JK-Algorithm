@@ -2,7 +2,7 @@
 #include <vector>
 
 const int MAX = 52;
-int T, M, N, K; // M,N : width, height / K : position number
+int T, M, N, K;
 bool data[MAX][MAX]{ true };
 bool visited[MAX][MAX]{ false };
 std::vector<int> result;
