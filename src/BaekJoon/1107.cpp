@@ -8,28 +8,26 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-int INF = 1000007;
+const int INF = 1000007;
+
 int broken[10];
 int N, M;
 
-int Min(int a, int b) {
-	return a < b ? a : b;
-}
+int Min(int a, int b) { return a < b ? a : b; }
 
-bool possible(int k) {
+bool possible(int k) 
+{
 	if (k == 0)
 		return broken[0] ? false : true;
-	while (k) {
-		if (broken[k % 10] == 1) {
-			return false;
-		}
+	while (k) { if (broken[k % 10] == 1) return false; }
+
 		k /= 10;
-	}
 
 	return true;
 }
 
-int find(int N) {
+int find(int N)
+{
 	int hundred = abs(N - 100);
 	int buttonMin = INF;
 	int temp;
@@ -43,6 +41,7 @@ int find(int N) {
 
 	return Min(hundred, buttonMin);
 }
+
 int main()
 {
 	Init();
