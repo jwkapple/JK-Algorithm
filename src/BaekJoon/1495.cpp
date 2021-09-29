@@ -7,7 +7,6 @@ void Init()
 }
 
 const int MAX = 110;
-
 bool DP[MAX][1010];
 int data[MAX];
 int N, S, M;
