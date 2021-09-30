@@ -10,7 +10,6 @@ int currentSum = 0;
 void back(int current)
 {
 	if (current == N) return;
-
 	if (currentSum + data[current] == S) result++;
 
 	back(current + 1);
