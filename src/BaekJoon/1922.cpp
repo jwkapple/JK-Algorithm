@@ -4,91 +4,81 @@
 
 void Init()
 {
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-int getParent(int set[], int x)
+struct Node
 {
-	if (set[x] == x) return x;
-	else return set[x] = getParent(set, set[x]);
-}
+    int Value;
+    int From;
+    int To;
 
-void unionParent(int set[], int a, int b)
-{
-	a = getParent(set, a);
-	b = getParent(set, b);
-
-	if (a < b) set[b] = a;
-	else set[a] = b;
-}
-
-int find(int set[], int a, int b)
-{
-	a = getParent(set, a);
-	b = getParent(set, b);
-
-	if (a == b) return true;
-	else return false;
-}
-
-class Edge
-{
-public:
-	int node[2];
-	int cost;
-
-	Edge(int a, int b, int cost)
-	{
-		this->node[0] = a;
-		this->node[1] = b;
-		this->cost = cost;
-	}
-
-	bool operator < (Edge& edge)
-	{
-		return this->cost < edge.cost;
-	}
+    Node() {};
+    Node(int v, int f, int t) : Value(v), From(f), To(t) {};
 };
 
-const int MAX = 1001;
+bool operator<(Node L, Node R)
+{
+    return L.Value < R.Value;
+}
 
-std::vector<Edge> path;
+const int MAX = 1000 + 1;
+
+std::vector<Node> data;
 int parent[MAX];
-int result = 0;
-int N, M;
+int N, M, result = 0;
+
+int find(int x)
+{
+    if (x == parent[x]) return x;
+    else return parent[x] = find(parent[x]);
+}
+
+void merge(int x, int y)
+{
+    y = find(y);
+    x = find(x);
+
+    if (y > x) parent[y] = x;
+    else parent[x] = y;
+}
+
+bool findParent(int x, int y)
+{
+    y = find(y);
+    x = find(x);
+
+    return y == x;
+}
 int main()
 {
-	Init();
+    Init();
 
-	std::cin >> N >> M;
+    std::cin >> N >> M;
 
-	int a, b, c;
-	for (int i = 0; i < M; i++)
-	{
-		std::cin >> a >> b >> c;
+    int from, to, value;
+    for (int i = 0; i < M; ++i)
+    {
+        std::cin >> from >> to >> value;
+        if (from == to) continue;
 
-		if (a == b) continue;
+        data.push_back(Node(value, from, to));
+    }
 
-		path.push_back(Edge(a, b, c));
-	}
+    std::sort(data.begin(), data.end());
+    for (int i = 1; i <= N; ++i) { parent[i] = i; }
 
-	std::sort(path.begin(), path.end());
+    for (auto p : data)
+    {
+        auto [v, f, t] = p;
 
-	for (int i = 1; i <= N; ++i)
-	{
-		parent[i] = i;
-	}
+        if (!findParent(f, t))
+        {
+            merge(f, t);
+            result += v;
+        }
+    }
 
-	for (int i = 0; i < path.size(); ++i)
-	{
-		auto cur = path[i];
-		if (!find(parent, cur.node[0], cur.node[1]))
-		{
-			unionParent(parent, cur.node[0], cur.node[1]);
-			result += cur.cost;
-		}
-	}
-
-	std::cout << result;
+    std::cout << result;
 }
