@@ -1,97 +1,56 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <vector>
+#include <climits>
 #include <stdlib.h>
 
-#ifdef TEST
-#include <fstream>
-std::ifstream readFile;
-#endif // TEST
+#define ll long long
 
-void Init() {
+void Init()
+{
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
-std::vector<int> negative;
-std::vector<int> positive;
-int resultL, resultR;
+const int MAX = 1e5 + 1;
+
+std::vector<int> data;
 int N;
+ll left = 0, right, result = LLONG_MAX, resultL, resultR;
 
 int main()
 {
 	Init();
 
 	std::cin >> N;
+	right = N - 1;
 
 	int tmp;
-	for (int i = 0;i < N; i++)
+	for (int i = 0; i < N; ++i)
 	{
 		std::cin >> tmp;
-		if (tmp < 0) negative.push_back(tmp);
-		else positive.push_back(tmp);
+		data.push_back(tmp);
 	}
 
-	std::sort(negative.begin(), negative.end(), [](const int& left, const int& right) { return left > right; });
-	std::sort(positive.begin(), positive.end());
-
-	if (!negative.size())
+	std::sort(data.begin(), data.end());
+	ll current = 0;
+	while (left < right)
 	{
-		std::cout << positive[0] << " " << positive[1];
-		return 0;
-	}
-	if (!positive.size())
-	{
-		std::cout << negative[1] << " " << negative[0];
-		return 0;
-	}
+		current = data[left] + data[right];
 
-	auto minus = negative.begin(); auto plus = positive.begin();
-
-	long long min = 5e30;
-
-	if (positive.size() >= 2)
-	{
-		long long pos = std::abs(positive[1] + positive[0]);
-		if (pos < min)
+		int abCurrent = std::abs(current);
+		if (abCurrent < result)
 		{
-			min = pos;
-			resultL = positive[0];
-			resultR = positive[1];
-		}
-	}
-
-	if (negative.size() >= 2)
-	{
-		long long neg = std::abs(negative[1] + negative[0]);
-		if (neg < min)
-		{
-			min = neg;
-			resultL = negative[1];
-			resultR = negative[0];
-		}
-	}
-
-	while (minus != negative.end() && plus != positive.end())
-	{
-		int comp = *minus + *plus;
-		if (comp == 0)
-		{
-			resultL = *minus;
-			resultR = *plus;
-			break;
-		}
-		if (std::abs(comp) < min)
-		{
-			min = std::abs(comp);
-			resultR = *plus;
-			resultL = *minus;
+			result = abCurrent;
+			resultL = data[left];
+			resultR = data[right];
 		}
 
-		if (comp < 0) plus++;
-		else minus++;
-
-		resultL, resultR;
+		if (current >= 0)
+			right--;
+		else
+			left++;
 	}
 
 	std::cout << resultL << " " << resultR;
