@@ -1,31 +1,37 @@
 #include <iostream>
-#include <algorithm>
+#include <vector>
 #include <queue>
-
-#define ll long long
 
 void Init()
 {
     std::ios_base::sync_with_stdio(false);
-    std::cin.tie(NULL); std::cout.tie(NULL);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
 }
 
 struct Node
 {
+    int Size;
     int Color;
-    int Value;
     int Num;
 
-    Node() {};
-    Node(int c, int v, int n) : Color(c), Value(v), Num(n) {};
+    Node(){};
+    Node(int s, int c, int n) : Size(s), Color(c), Num(n){};
 };
 
-const int MAX = 2e5 + 2;
+bool operator<(Node L, Node R)
+{
+    if (L.Size == R.Size)
+        return L.Color > R.Color;
 
-Node data[MAX];
-std::queue<pii> Q;
-ll result[MAX], DP[MAX];
-int N;
+    return L.Size > R.Size;
+}
+
+const int MAX = 2 * 1e5 + 1;
+
+std::priority_queue<Node> PQ;
+int Value[MAX], result[MAX];
+int N, total = 0, curSize = 0, curValue = 0, curColor = 0, curColVal = 0;
 
 int main()
 {
@@ -33,36 +39,29 @@ int main()
 
     std::cin >> N;
 
-    int c, v;
-    for (int i = 1; i <= N; ++i)
+    int tColor, tSize;
+    for (int i = 0; i < N; ++i)
     {
-        std::cin >> c >> v;
-
-        data[i] = Node(c, v, i);
+        std::cin >> tColor >> tSize;
+        PQ.push(Node(tSize, tColor, i));
     }
 
-    std::sort(data + 1, data + N + 1, [](Node L, Node R)
-    { if (L.Value == R.Value) return L.Color < R.Color;
-    return L.Value < R.Value;
-    });
-
-    ll tot = 0;
-    int prev = -1;
-    for (int i = 1; i <= N; ++i)
+    while (!PQ.empty())
     {
-        auto [color, value, num] = data[i];
+        auto [size, color, num] = PQ.top();
+        PQ.pop();
 
-        if (prev != value)
-        {
-            prev = value;
-            result[num] = tot - DP[color];
-        }
+        curColVal = curColor == color ? curColVal + size : 0;
+        curValue = curSize == size ? curValue + size : 0;
 
-        DP[color] += value;
-        tot += value;
+        result[num] = total - Value[color] - curValue + curColVal;
+        Value[color] += size;
+        total += size;
+
+        curSize = size;
     }
 
-    for (int i = 1; i <= N; ++i)
+    for (int i = 0; i < N; ++i)
     {
         std::cout << result[i] << "\n";
     }
