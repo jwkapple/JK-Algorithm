@@ -70,9 +70,7 @@ int main()
 			size++;
 		}
 	}
-
 	std::cin >> P;
-
 	if (size == 0)
 	{
 		if (P == 0) std::cout << 0;
