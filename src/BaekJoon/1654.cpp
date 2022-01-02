@@ -10,6 +10,7 @@ const int MAX = 1e4 + 2;
 
 int data[MAX];
 int K, N, result = 0;
+
 int main()
 {
 	Init();
