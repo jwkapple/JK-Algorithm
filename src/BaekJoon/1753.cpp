@@ -1,72 +1,82 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 #include <climits>
+#include <vector>
 #include <queue>
+
+#define pii std::pair<int, int>
 
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
-typedef std::pair<int, int> pii;
+const int MAX = 1000 + 1;
 
-const int MAX = 2e4 + 1;
+std::vector<pii> path[MAX];
 
-std::vector<pii> adj[MAX];
-std::priority_queue< pii, std::vector<pii>, std::greater<pii>> pq;
 int dij[MAX];
-bool visited[MAX];
+int N, M;
+int to;
 
-int V, E, S;
+void func(int num)
+{
+	std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
+	int cur, value;
 
+	dij[num] = 0;
+
+	Q.push(pii(0, num));
+
+	while (!Q.empty())
+	{
+		do
+		{
+			value = Q.top().first;
+			cur = Q.top().second;
+			Q.pop();
+		} while (value >= dij[cur] && !Q.empty());
+
+		dij[cur] = value;
+		if (cur == to)
+			return;
+
+		for (auto p : path[cur])
+		{
+			auto [nValue, next] = p;
+
+			nValue += value;
+			if (dij[next] > nValue)
+			{
+				Q.push(pii(nValue, next));
+			}
+		}
+	}
+}
 int main()
 {
 	Init();
 
-	std::cin >> V >> E >> S;
+	std::cin >> N >> M;
 
-	std::fill(dij, dij + V + 1, INT_MAX);
-	int from, to, v;
-	for (int i = 0; i < E; ++i)
+	int from, v;
+
+	for (int i = 1; i <= N; ++i)
+	{
+		dij[i] = INT_MAX;
+	}
+
+	for (int i = 0; i < M; ++i)
 	{
 		std::cin >> from >> to >> v;
-		adj[from].push_back(pii(v, to));
+
+		path[from].push_back(pii(v, to));
 	}
 
-	dij[S] = 0;
+	std::cin >> from >> to;
 
-	pq.push(pii(0, S));
+	func(from);
 
-	while (!pq.empty())
-	{
-		int cur;
-		do
-		{
-			cur = pq.top().second;
-			pq.pop();
-		} while (!pq.empty() && visited[cur]);
-
-		if (visited[cur]) break;
-
-		visited[cur] = true;
-
-		for (auto &p : adj[cur])
-		{
-			int next = p.first; int d = p.second;
-
-			if (dij[d] > dij[cur] + next)
-			{
-				dij[d] = dij[cur] + next;
-				pq.push(pii(dij[d], d));
-			}
-		}
-	}
-
-	for (int i = 1; i <= V; ++i)
-	{
-		if (dij[i] == INT_MAX) std::cout << "INF" << "\n";
-		else std::cout << dij[i] << "\n";
-	}
+	std::cout << dij[to];
 }
