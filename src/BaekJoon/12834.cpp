@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <queue>
 
@@ -13,38 +14,13 @@ void Init()
 
 const int MAX = 1000 + 1;
 
-int N, V, E, A, B, result = 0;
+std::vector<pii> path[MAX];
 
-std::vector<pii> path;
-int dij[100 + 1];
-int data[100 + 1];
+int dij[MAX], kist[100 + 1];
+int N, V, E, A, B;
+int from, to, result = 0;
+bool a, b;
 
-void func(int num)
-{
-	std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
-	Q.push(pii(num, 0));
-
-	int cur, value;
-	while (!Q.empty())
-	{
-		do
-		{
-			value = Q.top().first;
-			cur = Q.top().second;
-			Q.pop();
-		} while (dij[cur] && !Q.empty());
-
-		if (Q.empty())
-			break;
-		dij[cur] = value;
-
-		for (auto p : path)
-		{
-			auto [nValue, next] = p;
-			Q.push(pii(value + nValue, next));
-		}
-	}
-}
 int main()
 {
 	Init();
@@ -54,31 +30,72 @@ int main()
 
 	for (int i = 0; i < N; ++i)
 	{
-		std::cin >> data[i];
+		std::cin >> kist[i];
 	}
 
-	int from, to, v;
-
+	int v;
 	for (int i = 0; i < E; ++i)
 	{
 		std::cin >> from >> to >> v;
-		path.push_back(pii(to, v));
-		path.push_back(pii(from, v));
+		path[from].push_back(pii(v, to));
+		path[to].push_back(pii(v, from));
 	}
 
-	int tmp;
+	int cur, value;
 	for (int i = 0; i < N; ++i)
 	{
-		tmp = data[i];
-		dij[tmp] = -1;
-		func(tmp);
+		std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
 
-		result += dij[A] ? dij[A] : -1;
-		result += dij[B] ? dij[B] : -1;
-		for (int i = 1; i <= V; ++i)
+		std::fill(dij, dij + V + 1, 1e9);
+		Q.push(pii(0, kist[i]));
+		dij[kist[i]] = 0;
+		while (!Q.empty())
 		{
-			dij[i] = 0;
+			do
+			{
+				value = Q.top().first;
+				cur = Q.top().second;
+				Q.pop();
+			} while (value > dij[cur] && !Q.empty());
+
+			if (Q.empty() && value > dij[cur])
+				break;
+
+			if (cur == A)
+			{
+				a = true;
+				result += value;
+			}
+
+			if (cur == B)
+			{
+				b = true;
+				result += value;
+			}
+
+			if (a && b)
+				break;
+
+			dij[cur] = value;
+
+			for (auto p : path[cur])
+			{
+				auto [nValue, next] = p;
+				nValue += value;
+
+				if (nValue < dij[next])
+				{
+					Q.push(pii(nValue, next));
+				}
+			}
 		}
+
+		if (!a)
+			result += -1;
+		if (!b)
+			result += -1;
+
+		a = false, b = false;
 	}
 
 	std::cout << result;
