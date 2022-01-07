@@ -4,36 +4,44 @@
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
 const int MAX = 1e5 + 1;
 
-std::vector<int> pri[MAX];
-int data[MAX];
-int available[MAX];
-int build[MAX];
-int N, M, K;
+std::vector<int> path[MAX];
 
-bool check(int a, int b)
+int built[MAX], able[MAX];
+int N, M, K, X, Y;
+
+bool build(int num)
 {
-	switch (a)
+	if (able[num])
+		return false;
+	if (!built[num])
 	{
-	case 1: {
-		if (!available[b]) return false;
-
-		build[b]++;
-		for (int i = 0; i < pri[b].size(); ++i) { available[pri[b][i]]++; }
-		break;
+		for (auto p : path[num])
+		{
+			able[p]--;
+		}
 	}
 
-	case 2:
-	{
-		if (!build[b]) return false;
+	built[num]++;
+	return true;
+}
 
-		if (!(--build[b])) for (int i = 0; i < pri[b].size(); ++i) { available[pri[b][i]]--; }
-		break;
-	}
+bool destroy(int num)
+{
+
+	if (!built[num])
+		return false;
+	if (!(--built[num]))
+	{
+		for (auto p : path[num])
+		{
+			able[p]++;
+		}
 	}
 
 	return true;
@@ -45,19 +53,33 @@ int main()
 
 	std::cin >> N >> M >> K;
 
-	int a, b;
-	for (int i = 0;i < M; ++i)
+	for (int i = 0; i < M; ++i)
 	{
-		std::cin >> a >> b;
-		pri[a].push_back(b);
-		data[b]++;
+		std::cin >> X >> Y;
+		path[X].push_back(Y);
+		able[Y]++;
 	}
 
-	for (int i = 1; i <= N; ++i) if (!data[i]) available[i]++;
 	for (int i = 0; i < K; ++i)
 	{
-		std::cin >> a >> b;
-		if (!check(a, b)) { std::cout << "Lier!"; return 0; }
+		std::cin >> X >> Y;
+
+		if (X == 1)
+		{
+			if (!build(Y))
+			{
+				std::cout << "Lier!";
+				return 0;
+			}
+		}
+		else
+		{
+			if (!destroy(Y))
+			{
+				std::cout << "Lier!";
+				return 0;
+			}
+		}
 	}
 
 	std::cout << "King-God-Emperor";
