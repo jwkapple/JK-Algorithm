@@ -16,9 +16,9 @@ int main()
 		fRight = (left + empty) % 9901;
 		fEmpty = (left + right + empty) % 9901;
 
-		right = fRight % 9901;
-		left = fLeft % 9901;
-		empty = fEmpty % 9901;
+		right = fRight;
+		left = fLeft;
+		empty = fEmpty;
 	}
 
 	std::cout << (left + right + empty) % 9901;
