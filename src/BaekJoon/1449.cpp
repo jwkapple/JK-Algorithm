@@ -4,10 +4,11 @@
 const int MAX = 1001;
 int data[MAX];
 
+int N, L, result = 1;
+
+
 int main()
 {
-	int N, L;
-	int result = 1;
 
 	std::cin >> N >> L;
 
