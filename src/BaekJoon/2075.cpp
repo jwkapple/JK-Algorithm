@@ -2,6 +2,8 @@
 #include <vector>
 #include <queue>
 
+#define pii std::pair<int,int>
+
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
@@ -9,25 +11,10 @@ void Init()
 	std::cout.tie(NULL);
 }
 
-struct Node
-{
-	int Value;
-	int Y;
-	int X;
-
-	Node(){};
-	Node(int v, int y, int x) : Value(v), Y(y), X(x){};
-};
-
-bool operator<(Node L, Node R)
-{
-	return L.Value < R.Value;
-}
-
 const int MAX = 1500 + 1;
 
-std::priority_queue<Node> Q;
-int data[MAX][MAX];
+std::priority_queue<pii> Q;
+int data[MAX][MAX], dp[MAX];
 int N;
 
 int main()
@@ -42,17 +29,18 @@ int main()
 		{
 			std::cin >> data[y][x];
 		}
+		dp[y] = N;
 	}
 
 	for (int i = 1; i <= N; ++i)
 	{
-		Q.push(Node(data[N][i], N, i));
+		Q.push(pii(data[N][i], i));
 	}
 
 	int cur = 0;
 	while (true)
 	{
-		auto [v, y, x] = Q.top();
+		auto [v, x] = Q.top();
 		Q.pop();
 
 		if (++cur == N)
@@ -61,9 +49,10 @@ int main()
 			return 0;
 		}
 
-		if (y == 1)
-			continue;
+		if (dp[x] == 1)	continue;
 
-		Q.push(Node(data[y - 1][x], y - 1, x));
+		dp[x]--;
+
+		Q.push(pii(data[dp[x]][x], x));
 	}
 }
