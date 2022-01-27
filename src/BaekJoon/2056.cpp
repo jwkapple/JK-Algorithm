@@ -12,14 +12,12 @@ void Init()
 const int MAX = 1e4 + 1;
 
 std::queue<int> Q;
-bool visited[MAX];
-int N, cnt = 0;
-int dp[MAX];
-int time[MAX];
-int result = 0;
-int prep[MAX]; // 간선 갯수
-std::vector<int> work[MAX]; // 선행 임무
+std::vector<int> work[MAX];
 std::vector<int> work2[MAX];
+
+bool visited[MAX];
+int N, cnt = 0, result = 0;
+int dp[MAX], time[MAX], prep[MAX];
 
 int main()
 {
