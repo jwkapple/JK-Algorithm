@@ -32,7 +32,6 @@ int main()
 	Init();
 
 	std::cin >> N;
-
 	for (int i = 1; i <= N; ++i)
 	{
 		std::cin >> path[i];
@@ -45,5 +44,9 @@ int main()
 	}
 
 	std::cout << result.size() << "\n";
-	for (int i = 0; i < result.size(); ++i) { std::cout << result[i] << "\n"; }
+	
+	for (int i = 0; i < result.size(); ++i) 
+	{ 
+		std::cout << result[i] << "\n"; 
+		}
 }
