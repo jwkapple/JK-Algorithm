@@ -11,11 +11,8 @@ void Init()
 const int MAX = 4e6 + 4;
 enum Case { NONE = 0, UPDATE, SUM };
 
-ll arr[MAX];
-ll data[MAX];
-ll lazy[MAX];
 std::vector<ll> result;
-
+ll arr[MAX], data[MAX], lazy[MAX];
 int N, M, K;
 
 ll init(int from, int to, int cur)
