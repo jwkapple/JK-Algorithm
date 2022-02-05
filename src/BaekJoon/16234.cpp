@@ -12,10 +12,7 @@ void Init()
 
 const int MAX = 50 + 1;
 int dir[4][2]{ {-1,0}, {1,0},{0,1},{0,-1} };
-
-int map[MAX][MAX];
-int data[MAX][MAX];
-int res[3000];
+int map[MAX][MAX], data[MAX][MAX], res[3000];
 
 int N, L, R, result = 0;
 bool tag;
