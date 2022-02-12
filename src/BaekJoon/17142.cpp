@@ -66,18 +66,13 @@ int calc()
 
 				if (Y > 0 && Y <= N && X > 0 && X <= N)
 				{
-					if (map[Y][X] != WALL)
+					if (map[Y][X] != WALL && !data[Y][X])
 					{
-						if (!data[Y][X])
-						{
-							if (map[Y][X] == NONE)
-							{
-								value++;
-							}
+						if (map[Y][X] == NONE)
+							value++;
 
-							data[Y][X] = true;
-							Q.push(pii(Y, X));
-						}
+						data[Y][X] = true;
+						Q.push(pii(Y, X));
 					}
 				}
 			}
@@ -93,13 +88,10 @@ int calc()
 int func(int cur)
 {
 	if (cur == virus.size() && activeNum != M)
-	{
 		return 1e9;
-	}
+
 	if (activeNum == M)
-	{
 		return calc();
-	}
 
 	activeNum++;
 	active[cur] = true;
@@ -128,10 +120,6 @@ int main()
 			case NONE:
 			{
 				total++;
-				break;
-			}
-			case WALL:
-			{
 				break;
 			}
 			case VIRUS:
