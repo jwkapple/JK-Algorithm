@@ -15,7 +15,8 @@ int dir[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 const int MAX = 100 + 1;
 
 bool data[MAX][MAX];
-int visited[MAX][MAX][3];
+int path[MAX][MAX];
+bool visited[MAX][MAX][3];
 int R, C, T = 1;
 
 int main()
@@ -42,7 +43,7 @@ int main()
 
 		Q.push(pii(tY, tX));
 
-		visited[tY][tX][cur] = T;
+		visited[tY][tX][cur] = true;
 		while (!Q.empty())
 		{
 			int size = Q.size();
@@ -52,6 +53,9 @@ int main()
 				auto [y, x] = Q.front();
 				Q.pop();
 
+				if (path[y][x] < T)
+					path[y][x] = T;
+
 				for (int i = 0; i < 4; ++i)
 				{
 					int Y = y + dir[i][0];
@@ -59,9 +63,9 @@ int main()
 
 					if (Y > 0 && Y <= R && X > 0 && X <= C)
 					{
-						if (!visited[Y][X][cur] && !data[Y][X])
+						if (!visited[Y][X][cur] && !data[y][x])
 						{
-							visited[Y][X][cur] = T;
+							visited[Y][X][cur] = true;
 							Q.push(pii(Y, X));
 						}
 					}
@@ -88,10 +92,7 @@ int main()
 			if (!ref[0] || !ref[1] || !ref[2])
 				continue;
 
-			int temp = ref[0];
-
-			temp = ref[1] > temp ? ref[1] : temp;
-			temp = ref[2] > temp ? ref[2] : temp;
+			auto temp = path[y][x];
 
 			if (temp < min)
 			{
@@ -108,6 +109,6 @@ int main()
 	if (min == 1e9)
 		std::cout << -1;
 	else
-		std::cout << min << "\n"
+		std::cout << min - 1 << "\n"
 				  << num;
 }
