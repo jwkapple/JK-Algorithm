@@ -3,11 +3,11 @@
 #include <string>
 #include <algorithm>
 
-std::vector<int> data;
-
-std::string N;
 unsigned long result = 0;
+std::vector<int> data;
+std::string N;
 bool is;
+
 int main()
 {
 	std::ios_base::sync_with_stdio(false);
