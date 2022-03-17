@@ -6,14 +6,11 @@ void Init()
 	std::ios_base::sync_with_stdio(false);
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
-//320
+
 const int MAX = 5e4 + 1, MAX_D = 18;
 
-std::vector<int> result;
-std::vector<int> adj[MAX];
-int data[MAX][MAX_D];
-int depth[MAX];
-
+std::vector<int> result, adj[MAX];
+int data[MAX][MAX_D], depth[MAX];
 int N, M;
 
 void makeDepth(int cur)
