@@ -52,9 +52,11 @@ int main()
 	}
 
 	std::fill(depth + 1, depth + N + 1, -1);
+	
 	depth[1] = 0;
 	makeDepth(1);
 	data[1][0] = 1;
+	
 	for (int j = 1; j < MAX_D; ++j)
 	{
 		for (int i = 1; i <= N; ++i)
