@@ -1,18 +1,16 @@
 #include <iostream>
-#include <algorithm>
-#include <vector>
-#define pii std::pair<int, int>
 
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
 const int MAX = 1e5 + 1;
-std::vector<pii> data;
-int L[MAX], R[MAX];
-int N, K;
+
+int DP[2][MAX];
+int N, K, W, V;
 
 int main()
 {
@@ -20,39 +18,32 @@ int main()
 
 	std::cin >> N >> K;
 
-	data.push_back(pii(0, 0));
-	int W, V;
-	for (int i = 1; i <= N; ++i)
+	bool S;
+	int cur, prev;
+	for (int a = 1; a <= N; ++a)
 	{
 		std::cin >> W >> V;
-		data.push_back(pii(W, V));
-	}
 
-	std::sort(data.begin(), data.end());
+		cur = S;
+		prev = !S;
 
-	int l, r;
-	int* left;
-	int* right;
-	for (int y = 1; y <= N; ++y)
-	{
-		if (y % 2) { left = L, right = R; }
-		else { left = R, right = L; }
-
-		auto[weight, value] = data[y];
-
-		for (int x = 1; x <= K; ++x)
+		for (int i = 1; i <= K; ++i)
 		{
-			if (x < weight) left[x] = right[x];
+			if (W <= i)
+			{
+				int on = DP[prev][i - W] + V;
+				int off = DP[prev][i];
+
+				DP[cur][i] = on > off ? on : off;
+			}
 			else
 			{
-				l = right[x - weight] + value;
-				r = right[x];
-
-				left[x] = l > r ? l : r;
+				DP[cur][i] = DP[prev][i];
 			}
 		}
+
+		S = !S;
 	}
 
-	if (N % 2) std::cout << L[K];
-	else std::cout << R[K];
+	std::cout << DP[cur][K];
 }
