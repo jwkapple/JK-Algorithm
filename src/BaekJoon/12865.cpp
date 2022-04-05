@@ -20,13 +20,14 @@ int main()
 
 	bool S;
 	int cur, prev;
+	
 	for (int a = 1; a <= N; ++a)
 	{
 		std::cin >> W >> V;
 
 		cur = S;
 		prev = !S;
-
+		
 		for (int i = 1; i <= K; ++i)
 		{
 			if (W <= i)

@@ -8,6 +8,7 @@ void Init()
 }
 
 const int MAX = 1e7 + 1;
+
 std::string S;
 int N, fail[MAX];
 
