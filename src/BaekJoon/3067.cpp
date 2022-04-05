@@ -56,9 +56,9 @@ int main()
 
 		result.push_back(func(0, M));
 
-		for (int y = 0; y < MAX; ++y)
+		for (int y = 0; y <= M; ++y)
 		{
-			for (int x = 0; x < 21; ++x)
+			for (int x = 0; x < N; ++x)
 			{
 				DP[x][y] = 0;
 			}
