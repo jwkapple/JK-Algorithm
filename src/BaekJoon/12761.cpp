@@ -2,8 +2,6 @@
 #include <vector>
 #include <queue>
 
-#define pii std::pair<int, int>
-
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
@@ -13,7 +11,7 @@ void Init()
 
 const int MAX = 1e5 + 1;
 
-std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
+std::queue<int> Q;
 bool visited[MAX];
 
 int from, to, N, M;
@@ -25,39 +23,50 @@ int main()
 	std::cin >> N >> M;
 	std::cin >> from >> to;
 
-	Q.push(pii(0, from));
+	Q.push(from);
+
+	int result = 0;
 
 	while (!Q.empty())
 	{
-		auto [walk, value] = Q.top();
-		Q.pop();
+		int size = Q.size();
 
-		if (value >= MAX || value < 0)
-			continue;
-		if (visited[value])
-			continue;
-		if (value == to)
+		for (int a = 0; a < size; ++a)
 		{
-			std::cout << walk;
-			return 0;
+			int value = Q.front();
+			Q.pop();
+
+			if (value >= MAX || value < 0)
+				continue;
+			if (visited[value])
+				continue;
+
+			if (value == to)
+			{
+				std::cout << result;
+				return 0;
+			}
+
+			visited[value] = true;
+
+			Q.push(value + 1);
+
+			if (value > 0)
+			{
+				Q.push(value - 1);
+				Q.push(value - N);
+				Q.push(value - M);
+			}
+
+			if (value < to)
+			{
+				Q.push(value + N);
+				Q.push(value + M);
+				Q.push(value * M);
+				Q.push(value * N);
+			}
 		}
 
-		visited[value] = true;
-
-		walk++;
-
-		Q.push(pii(walk, value + 1));
-
-		if (value > 0)
-		{
-			Q.push(pii(walk, value - 1));
-			Q.push(pii(walk, value - N));
-			Q.push(pii(walk, value - M));
-		}
-
-		Q.push(pii(walk, value + N));
-		Q.push(pii(walk, value + M));
-		Q.push(pii(walk, value * M));
-		Q.push(pii(walk, value * N));
+		result++;
 	}
 }
