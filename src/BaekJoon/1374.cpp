@@ -43,24 +43,18 @@ int main()
 
 		if (C == IN)
 		{
-			num++;
 			if (cur == 0)
-			{
 				total++;
-			}
 			else
-			{
 				cur--;
-			}
-			if (num == n)
+
+			if (++num == n)
 			{
 				std::cout << total;
 				return 0;
 			}
 		}
 		else
-		{
 			cur++;
-		}
 	}
 }
