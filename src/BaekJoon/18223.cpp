@@ -19,6 +19,47 @@ std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
 std::vector<pii> path[MAX];
 int V, E, P, min, minP, minV;
 
+void func(int &result, int *dij, int init, int end)
+{
+	while (!Q.empty())
+		Q.pop();
+
+	Q.push(pii(0, init));
+
+	int value, cur;
+	while (!Q.empty())
+	{
+		do
+		{
+			value = Q.top().first;
+			cur = Q.top().second;
+
+			Q.pop();
+		} while (!Q.empty() && dij[cur] != INF);
+
+		if (cur == end)
+		{
+			result = value;
+			break;
+		}
+
+		if (init == 1 && cur == P)
+			minP = value;
+
+		dij[cur] = value;
+
+		for (auto p : path[cur])
+		{
+			auto [nValue, next] = p;
+
+			if (dij[next] == INF)
+			{
+				Q.push(pii(nValue + value, next));
+			}
+		}
+	}
+}
+
 int main()
 {
 	Init();
@@ -35,116 +76,20 @@ int main()
 
 	for (int i = 1; i <= V; ++i)
 	{
-		dij[i] = INF;
-		dijP[i] = INF;
-		dijV[i] = INF;
+		dij[i] = dijP[i] = dijV[i] = INF;
 	}
-	Q.push(pii(0, 1));
 
-	int value, cur;
-	while (!Q.empty())
-	{
-		do
-		{
-			value = Q.top().first;
-			cur = Q.top().second;
-
-			Q.pop();
-		} while (!Q.empty() && dij[cur] != INF);
-
-		if (cur == V)
-		{
-			min = value;
-			break;
-		}
-
-		if (cur == P)
-			minP = value;
-
-		dij[cur] = value;
-
-		for (auto p : path[cur])
-		{
-			auto [nValue, next] = p;
-
-			if (dij[next] == INF)
-			{
-				Q.push(pii(nValue + value, next));
-			}
-		}
-	}
+	func(min, dij, 1, V);
 
 	if (minP == 0)
 	{
-		std::priority_queue<pii, std::vector<pii>, std::greater<pii>> PQ;
-
-		PQ.push(pii(0, 1));
-
-		while (!PQ.empty())
-		{
-			do
-			{
-				value = PQ.top().first;
-				cur = PQ.top().second;
-
-				PQ.pop();
-			} while (!PQ.empty() && dijP[cur] != INF);
-
-			if (cur == P)
-			{
-				minP = value;
-				break;
-			}
-
-			dijP[cur] = value;
-
-			for (auto p : path[cur])
-			{
-				auto [nValue, next] = p;
-
-				if (dijP[next] == INF)
-				{
-					PQ.push(pii(nValue + value, next));
-				}
-			}
-		}
+		func(minP, dijP, 1, P);
 	}
 
-	std::priority_queue<pii, std::vector<pii>, std::greater<pii>> VQ;
+	func(minV, dijV, P, V);
 
-	VQ.push(pii(0, P));
-
-	while (!VQ.empty())
-	{
-		do
-		{
-			value = VQ.top().first;
-			cur = VQ.top().second;
-
-			VQ.pop();
-		} while (!VQ.empty() && dijV[cur] != INF);
-
-		if (cur == V)
-		{
-			minV = value;
-			break;
-		}
-
-		dijV[cur] = value;
-
-		for (auto p : path[cur])
-
-			auto [nValue, next] = p;
-
-		if (dijV[next] == INF)
-		{
-			VQ.push(pii(nValue + value, next));
-		}
-	}
-}
-
-if (minV + minP == min)
-	std::cout << "SAVE HIM";
-else
-	std::cout << "GOOD BYE";
+	if (minV + minP == min)
+		std::cout << "SAVE HIM";
+	else
+		std::cout << "GOOD BYE";
 }
