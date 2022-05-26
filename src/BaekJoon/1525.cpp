@@ -4,7 +4,6 @@
 #include <queue>
 #include <map>
 
-using namespace std;
 const int TARGET = 123456789;
 
 typedef struct
@@ -30,14 +29,14 @@ int main()
 		for (int j = 0; j < 3; j++)
 		{
 			int num;
-			cin >> num;
+			std::cin >> num;
 
 			if (num == 0) num = 9;
 			start = start * 10 + num;
 		}
 
-	queue<int> q;
-	map<int, int> visited;
+	std::queue<int> q;
+	std::map<int, int> visited;
 
 	q.push(start);
 	visited[start] = 0;
@@ -45,7 +44,7 @@ int main()
 	while (!q.empty())
 	{
 		int cur = q.front();
-		string s = to_string(cur);
+		std::string s = std::to_string(cur);
 		q.pop();
 
 		if (cur == TARGET) break;
@@ -62,9 +61,9 @@ int main()
 
 			if (0 <= nextY && nextY < 3 && 0 <= nextX && nextX < 3)
 			{
-				string temp = s;
-				swap(temp[y * 3 + x], temp[nextY * 3 + nextX]);
-				int next = stoi(temp);
+				std::string temp = s;
+				std::swap(temp[y * 3 + x], temp[nextY * 3 + nextX]);
+				int next = std::stoi(temp);
 
 				if (!visited.count(next))
 				{
@@ -75,8 +74,8 @@ int main()
 		}
 	}
 	if (!visited.count(TARGET))
-		cout << -1 << "\n";
+		std::cout << -1 << "\n";
 	else
-		cout << visited[TARGET] << "\n";
+		std::cout << visited[TARGET] << "\n";
 	return 0;
 }
