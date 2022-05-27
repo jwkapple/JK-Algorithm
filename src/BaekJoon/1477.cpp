@@ -1,116 +1,53 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <queue>
+#include <vector>
+#include <cmath>
 
-void Init() {
+void Init()
+{
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
-struct Room
-{
-	int Current;
-	int Differ;
-	int Stick;
-};
-const int MAX = 1e5 + 1;
-
+std::priority_queue<int> Q;
+std::vector<int> data;
 int N, M, L;
 
-int restroom[MAX];
-std::vector<Room> heap;
-
-void swap(Room& A, Room& B)
+bool calc(int value)
 {
-	Room tmp = A;
-	A.Current = B.Current; A.Differ = B.Differ; A.Stick = B.Stick;
-	B.Current = tmp.Current; B.Differ = tmp.Differ; B.Stick = tmp.Stick;
-}
-void insert(std::vector<Room>& heap, Room data)
-{
-	if (heap.size() == 0)
+	if (value == 0)
+		return false;
+
+	int total = 0;
+
+	for (auto p : data)
 	{
-		heap.push_back(data);
-		return;
-	}
+		if (value >= p)
+			continue;
 
-	heap.push_back(data);
-
-	int now = heap.size();
-	int parent = now / 2;
-
-	while (parent > 0)
-	{
-		if (heap[now - 1].Current > heap[parent - 1].Current)
+		if (p % value == 0)
 		{
-			swap(heap[now - 1], heap[parent - 1]);
-			now = parent;
-			parent = now / 2;
+			total += (p / value) - 1;
 		}
-
-		else break;
-	}
-}
-
-Room pop(std::vector<Room>& heap)
-{
-	Room min = heap[0];
-	heap[0] = heap.back();
-	heap.pop_back();
-
-	int now = 1;
-	int left = now * 2;
-	int right = now * 2 + 1;
-
-	while (left <= heap.size())
-	{
-		if (right <= heap.size())
-		{
-			if (heap[left - 1].Current > heap[right - 1].Current)
-			{
-				if (heap[left - 1].Current > heap[now - 1].Current)
-				{
-					swap(heap[left - 1], heap[now - 1]);
-
-					now = left;
-					left = now * 2;
-					right = now * 2 + 1;
-				}
-
-				else break;
-			}
-
-			else
-			{
-				if (heap[right - 1].Current > heap[now - 1].Current)
-				{
-					swap(heap[right - 1], heap[now - 1]);
-
-					now = right;
-					left = now * 2;
-					right = now * 2 + 1;
-				}
-
-				else break;
-			}
-		}
-
 		else
-		{
-			if (heap[left - 1].Current > heap[now - 1].Current)
-			{
-				swap(heap[left - 1], heap[now - 1]);
-
-				now = left;
-				left = now * 2;
-				right = now * 2 + 1;
-			}
-
-			else break;
-		}
+			total += std::floor((float)(p) / (float)(value));
 	}
 
-	return min;
+	return total <= M;
+}
+
+int func(int L, int R)
+{
+	if (L == R)
+		return L;
+	if (L + 1 == R)
+		return calc(L) ? L : R;
+
+	int mid = (L + R) / 2;
+
+	return calc(mid) ? func(L, mid) : func(mid + 1, R);
 }
 int main()
 {
@@ -118,38 +55,25 @@ int main()
 
 	std::cin >> N >> M >> L;
 
-	for (int i = 1;i <= N; i++)
+	int tmp;
+	for (int i = 0; i < N; ++i)
 	{
-		std::cin >> restroom[i];
+		std::cin >> tmp;
+		Q.push(tmp);
 	}
 
-	restroom[0] = 0;
-	restroom[N + 1] = L;
+	Q.push(0);
 
-	std::sort(restroom, restroom + N + 2);
-
-	for (int i = 0;i <= N; i++)
+	int prev = L;
+	while (!Q.empty())
 	{
-		Room tmp;
-		tmp.Differ = restroom[i + 1] - restroom[i];
-		tmp.Stick = 1;
-		tmp.Current = tmp.Differ;
-
-		insert(heap, tmp);
+		int cur = Q.top();
+		Q.pop();
+		data.push_back(prev - cur);
+		prev = cur;
 	}
 
-	for (int i = 0;i < M; i++)
-	{
-		Room max = pop(heap);
-		max.Stick++;
-		if (max.Differ % max.Stick != 0) max.Current = max.Differ / max.Stick + 1;
+	std::sort(data.begin(), data.end());
 
-		else max.Current = max.Differ / max.Stick;
-
-		insert(heap, max);
-	}
-
-	Room result = pop(heap);
-
-	std::cout << result.Current;
+	std::cout << func(0, data[data.size() - 1]);
 }
