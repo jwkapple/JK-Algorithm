@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <queue>
 
 void Init()
 {
     std::ios_base::sync_with_stdio(false);
-    std::cin.tie(NULL); std::cout.tie(NULL);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
 }
 
 struct Node
@@ -14,42 +15,47 @@ struct Node
     int From;
     int To;
 
-    Node() {};
-    Node(int v, int f, int t) : Value(v), From(f), To(t) {};
+    Node(){};
+    Node(int v, int f, int t) : Value(v), From(f), To(t){};
 };
 
-bool operator<(Node L, Node R)
+bool operator>(const Node &L, const Node &R)
 {
-    return L.Value < R.Value;
+    return L.Value > R.Value;
 }
 
 const int MAX = 1000 + 1;
 
-std::vector<Node> data;
+std::priority_queue<Node, std::vector<Node>, std::greater<Node>> Q;
+
 int parent[MAX];
-int N, M, result = 0;
+int N, M;
 
-int find(int x)
+int find(int A)
 {
-    if (x == parent[x]) return x;
-    else return parent[x] = find(parent[x]);
+    if (parent[A] <= 0)
+        return A;
+    return parent[A] = find(parent[A]);
 }
 
-void merge(int x, int y)
+void merge(int A, int B, int value)
 {
-    y = find(y);
-    x = find(x);
+    int pA = find(A);
+    int pB = find(B);
 
-    if (y > x) parent[y] = x;
-    else parent[x] = y;
-}
+    if (pA == pB)
+        return;
 
-bool findParent(int x, int y)
-{
-    y = find(y);
-    x = find(x);
-
-    return y == x;
+    if (pA < pB)
+    {
+        parent[pA] += parent[pB] + value * -1;
+        parent[pB] = pA;
+    }
+    else
+    {
+        parent[pB] += parent[pA] + value * -1;
+        parent[pA] = pB;
+    }
 }
 int main()
 {
@@ -57,28 +63,28 @@ int main()
 
     std::cin >> N >> M;
 
-    int from, to, value;
+    int f, t, v;
+
     for (int i = 0; i < M; ++i)
     {
-        std::cin >> from >> to >> value;
-        if (from == to) continue;
+        std::cin >> f >> t >> v;
 
-        data.push_back(Node(value, from, to));
+        Q.push(Node(v, f, t));
     }
 
-    std::sort(data.begin(), data.end());
-    for (int i = 1; i <= N; ++i) { parent[i] = i; }
-
-    for (auto p : data)
+    while (!Q.empty())
     {
-        auto [v, f, t] = p;
+        auto [value, A, B] = Q.top();
+        Q.pop();
 
-        if (!findParent(f, t))
-        {
-            merge(f, t);
-            result += v;
-        }
+        int pA = find(A);
+        int pB = find(B);
+
+        if (pA == pB)
+            continue;
+
+        merge(pA, pB, value);
     }
 
-    std::cout << result;
+    std::cout << parent[1] * -1;
 }
