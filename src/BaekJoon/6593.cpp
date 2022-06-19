@@ -28,8 +28,7 @@ const int MAX = 30 + 1;
 std::vector<int> result;
 bool map[MAX][MAX][MAX];
 int visited[MAX][MAX][MAX];
-int L, R, C;
-int eL, eX, eY;
+int L, R, C, eL, eX, eY;
 
 int main()
 {
@@ -53,26 +52,27 @@ int main()
 
 					switch (tmp)
 					{
-					case 'S':
-					{
-						Q.push(Node(l, y, x));
-						break;
-					}
-					case 'E':
-					{
-						eL = l;
-						eY = y;
-						eX = x;
-						break;
-					}
-					case '#':
-					{
-						map[l][y][x] = 1;
-						break;
-					}
+						case 'S':
+						{
+							Q.push(Node(l, y, x));
+							break;
+						}
+						case 'E':
+						{
+							eL = l;
+							eY = y;
+							eX = x;
+							break;
+						}
+						case '#':
+						{
+							map[l][y][x] = 1;
+							break;
+						}
 					}
 				}
 			}
+			
 			std::cin >> tmp;
 		}
 
@@ -132,14 +132,15 @@ int main()
 				}
 			}
 
-			if (isDone)
-				break;
+			if (isDone)	break;
+
 			time++;
 		}
 
-		if (!isDone)
-			result.push_back(-1);
+		if (!isDone) result.push_back(-1);
+		
 		std::cin >> L >> R >> C;
+
 		current++;
 	}
 
@@ -149,7 +150,6 @@ int main()
 		{
 			std::cout << "Trapped!\n";
 		}
-		else
-			std::cout << "Escaped in " << p << " minute(s).\n";
+		else std::cout << "Escaped in " << p << " minute(s).\n";
 	}
 }
