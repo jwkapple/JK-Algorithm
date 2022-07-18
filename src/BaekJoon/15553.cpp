@@ -1,5 +1,6 @@
 #include <iostream>
-#include <queue>
+#include <algorithm>
+#include <vector>
 
 void Init()
 {
@@ -8,7 +9,7 @@ void Init()
 	std::cout.tie(NULL);
 }
 
-std::priority_queue<int> Q;
+std::vector<int> data;
 int N, K;
 
 int main()
@@ -18,7 +19,7 @@ int main()
 	std::cin >> N >> K;
 
 	int start, end;
-	int tmp, max = 0, prev = 0;
+	int tmp, prev = 0;
 	for (int i = 0; i < N; ++i)
 	{
 		std::cin >> tmp;
@@ -29,7 +30,7 @@ int main()
 			start = tmp;
 		}
 
-		Q.push(tmp - prev);
+		data.push_back(tmp - prev);
 
 		prev = tmp;
 	}
@@ -38,10 +39,13 @@ int main()
 
 	int total = end - start + 1;
 
-	while (--K)
+	total += K - 1;
+	std::sort(data.begin(), data.end());
+
+	int size = data.size() - 1;
+	for (int i = 0; i < K - 1; ++i)
 	{
-		total -= (Q.top() - 1);
-		Q.pop();
+		total -= data[size - i];
 	}
 
 	std::cout << total;
