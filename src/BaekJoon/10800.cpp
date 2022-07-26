@@ -1,6 +1,9 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <queue>
+
+#define pii std::pair<int, int>
 
 void Init()
 {
@@ -9,29 +12,13 @@ void Init()
     std::cout.tie(NULL);
 }
 
-struct Node
-{
-    int Size;
-    int Color;
-    int Num;
+const int MAX = 2e5 + 1;
 
-    Node(){};
-    Node(int s, int c, int n) : Size(s), Color(c), Num(n){};
-};
+std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
 
-bool operator<(Node L, Node R)
-{
-    if (L.Size == R.Size)
-        return L.Color > R.Color;
-
-    return L.Size > R.Size;
-}
-
-const int MAX = 2 * 1e5 + 1;
-
-std::priority_queue<Node> PQ;
-int Value[MAX], result[MAX];
-int N, total = 0, curSize = 0, curValue = 0, curColor = 0, curColVal = 0;
+pii colorH[MAX];
+int sum[MAX], info[MAX], history[2000 + 1], result[MAX];
+int N;
 
 int main()
 {
@@ -39,26 +26,34 @@ int main()
 
     std::cin >> N;
 
-    int tColor, tSize;
+    int C, S;
     for (int i = 0; i < N; ++i)
     {
-        std::cin >> tColor >> tSize;
-        PQ.push(Node(tSize, tColor, i));
+        std::cin >> C >> S;
+        Q.push(pii(S, i));
+
+        info[i] = C;
     }
 
-    while (!PQ.empty())
+    int color, total = 0;
+    while (!Q.empty())
     {
-        auto [size, color, num] = PQ.top();
-        PQ.pop();
+        auto [size, ID] = Q.top();
+        Q.pop();
 
-        curColVal = curColor == color ? curColVal + size : 0;
-        curValue = curSize == size ? curValue + size : 0;
+        color = info[ID];
 
-        result[num] = total - Value[color] - curValue + curColVal;
-        Value[color] += size;
+        auto [pSize, pID] = colorH[color];
+
+        if (pSize == size)
+            result[ID] = result[pID];
+        else
+            result[ID] = total - history[size] - sum[color];
+
+        sum[color] += size;
         total += size;
-
-        curSize = size;
+        history[size] += size;
+        colorH[color] = pii(size, ID);
     }
 
     for (int i = 0; i < N; ++i)
