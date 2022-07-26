@@ -9,7 +9,7 @@ void Init()
 
 const int MAX = 3e6 + 1;
 
-int data[MAX * 2], visited[MAX];
+int data[MAX * 2], visited[3000 + 1];
 int N, D, K, C, L, R, total = 0, max = 0, limit;
 
 int main()
@@ -27,30 +27,30 @@ int main()
 
 	for (int i = 1; i <= K; ++i)
 	{
-		if (visited[data[i]] == 0)
+		int cur = data[i];
+		if (visited[cur] == 0)
 			total++;
 
-		visited[data[i]]++;
+		visited[cur]++;
 	}
 
-	max = max > total + !visited[C] ? max : total + !visited[C];
+	int value = total + !visited[C];
+	max = max > value ? max : value;
 
 	while (true)
 	{
 		// L 이동
-		visited[data[L]]--;
-		if (visited[data[L]] == 0)
+		if (--visited[data[L++]] == 0)
 			total--;
-		L++;
 
 		// R 이동
-		if (visited[data[++R]] == 0)
+		if (visited[data[++R]]++ == 0)
 			total++;
-		visited[data[R]]++;
 
-		max = max > total + !visited[C] ? max : total + !visited[C];
+		value = total + !visited[C];
+		max = max > value ? max : value;
 
-		if (R == N * 2 || max == limit)
+		if (L == N + 1 || max == limit)
 			break;
 	}
 
