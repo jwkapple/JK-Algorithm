@@ -29,6 +29,7 @@ const int MAX = 1e5 + 1;
 
 std::priority_queue<Node, std::vector<Node>, std::greater<Node>> Q;
 ll parent[MAX];
+int visited[MAX];
 int N, M, nDone = 1;
 ll origin;
 
@@ -103,6 +104,8 @@ int main()
 		if (Q.empty())
 			break;
 
+		visited[from] = visited[to] = true;
+
 		int fParent = find(from), tParent = find(to);
 
 		if (fParent != tParent)
@@ -111,14 +114,14 @@ int main()
 		}
 	}
 
-	for (int i = 2; i <= N; ++i)
+	for (int i = 1; i <= N; ++i)
 	{
-		if (find(i) == 1)
-			nDone++;
+		if (!visited[i])
+		{
+			std::cout << -1;
+			return 0;
+		}
 	}
 
-	if (nDone != N)
-		std::cout << -1;
-	else
-		std::cout << origin + parent[1];
+	std::cout << origin + parent[1];
 }
