@@ -38,14 +38,13 @@ int main()
 			if (i % 2)
 			{
 				cmp = i / 2;
-
 				std::vector<int> out;
 				while (cmp--)
 				{
 					out.push_back(pq.top());
 					pq.pop();
 				}
-
+				
 				result[tt - T].push_back(pq.top());
 				for (int i = 0; i < out.size(); ++i) pq.push(out[i]);
 			}
