@@ -1,63 +1,73 @@
 #include <iostream>
 #include <queue>
-
 #define pii std::pair<int, int>
 
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
-std::priority_queue<pii> PQ, MQ;
+std::priority_queue<pii> left, right;
 
-int N, K, S, result = 0;
+int N, S, K, result = 0;
 
+void func(std::priority_queue<pii> Q)
+{
+	while (!Q.empty())
+	{
+		int remain = K;
+
+		auto [distance, student] = Q.top();
+		Q.pop();
+
+		result += distance;
+
+		if (remain < student)
+		{
+			Q.push(pii(distance, student - remain));
+			remain = 0;
+		}
+		else
+			remain -= student;
+
+		while (remain > 0 && !Q.empty())
+		{
+			auto [nDistance, nStudent] = Q.top();
+			Q.pop();
+
+			if (nStudent > remain)
+			{
+				Q.push(pii(nDistance, nStudent - remain));
+				remain = 0;
+			}
+			else
+			{
+				remain -= nStudent;
+			}
+		}
+	}
+}
 int main()
 {
 	Init();
 
 	std::cin >> N >> K >> S;
 
-	int A, B;
-	for (int i = 0;i < N; ++i)
+	int location, value;
+	for (int i = 0; i < N; ++i)
 	{
-		std::cin >> A >> B;
+		std::cin >> location >> value;
 
-		if (A > S) PQ.push(pii(A - S, B));
-		else MQ.push(pii(S - A, B));
-	}
-
-	int cur = 0;
-	while (!PQ.empty())
-	{
-		auto[pos, v] = PQ.top(); PQ.pop();
-
-		if (cur == 0) result += pos * 2;
-		if (cur + v < K) cur += v;
-		else if (cur + v == K) cur = 0;
+		if (location < S)
+			left.push(pii(S - location, value));
 		else
-		{
-			PQ.push(pii(pos, v - K + cur));
-			cur = 0;
-		}
+			right.push(pii(location - S, value));
 	}
 
-	cur = 0;
+	func(left);
+	func(right);
 
-	while (!MQ.empty())
-	{
-		auto[pos, v] = MQ.top(); MQ.pop();
-
-		if (cur == 0) result += pos * 2;
-		if (cur + v < K) cur += v;
-		else if (cur + v == K) cur = 0;
-		else
-		{
-			MQ.push(pii(pos, v - K + cur));
-			cur = 0;
-		}
-	}
-
-	std::cout << result;
+	std::cout << result * 2;
 }
