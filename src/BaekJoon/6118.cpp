@@ -12,7 +12,6 @@ void Init()
 const int MAX = 2e4 + 1;
 
 std::vector<int> path[MAX];
-bool visited[MAX];
 int length[MAX];
 int N, M;
 
@@ -35,7 +34,7 @@ int main()
 	std::queue<int> Q;
 	Q.push(1);
 
-	int value = 0, cur;
+	int value = 1, cur;
 	while (!Q.empty())
 	{
 		bool isDone = false;
@@ -46,16 +45,15 @@ int main()
 			int cur = Q.front();
 			Q.pop();
 
-			if (visited[cur])
+			if (length[cur])
 				continue;
 
 			isDone = true;
-			visited[cur] = true;
 			length[cur] = value;
 
 			for (auto p : path[cur])
 			{
-				if (!visited[p])
+				if (!length[cur])
 					Q.push(p);
 			}
 		}
@@ -77,5 +75,5 @@ int main()
 		}
 	}
 
-	std::cout << minimum << " " << value << " " << total;
+	std::cout << minimum << " " << value - 1 << " " << total;
 }
