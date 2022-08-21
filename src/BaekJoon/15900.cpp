@@ -19,7 +19,7 @@ void func(int value, int level)
 {
 	visited[value] = level;
 
-	ㄹ for (auto p : data[value])
+	for (auto p : data[value])
 	{
 		if (!visited[p])
 			func(p, level + 1);
