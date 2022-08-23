@@ -18,6 +18,8 @@ int L, R;
 
 void func(int L, int R)
 {
+	if (L > R)
+		return;
 	if (L == R)
 	{
 		result.push_back(L);
@@ -55,14 +57,15 @@ int main()
 
 	std::cin >> data;
 
-	L = 0, R = data.size() - 1;
+	int size = data.size();
+	L = 0, R = size - 1;
 
 	func(L, R);
 
-	for (int i = 0; i < data.size(); ++i)
+	for (int i = 0; i < size; ++i)
 	{
 		visited[result[i]] = true;
-		for (int j = 0; j < data.size(); ++j)
+		for (int j = 0; j < size; ++j)
 		{
 			if (visited[j])
 				std::cout << data[j];
