@@ -22,27 +22,24 @@ int func(int value, int prev)
 
 	auto &ret = DP[value][prev];
 
-	if (ret)
-		return ret;
-	if (prev == 1)
+	if (ret) return ret;
+
+	switch (prev)
 	{
+	case 1:
 		return ret = DP[value][4] = func(value + 1, 1) % DIV + func(value + 2, 2) % DIV;
-	}
 
-	if (prev == 2)
-	{
+	case 2:
 		return func(value - 1, 3) % DIV;
-	}
 
-	if (prev == 3)
-	{
+	case 3:
 		return func(value + 2, 4) % DIV;
-	}
 
-	if (prev == 4)
-	{
+	case 4:
 		return DP[value][1] = ret = func(value + 1, 1) % DIV + func(value + 2, 2) % DIV;
 	}
+	if (prev == 1) 
+	
 
 	return 0;
 }
