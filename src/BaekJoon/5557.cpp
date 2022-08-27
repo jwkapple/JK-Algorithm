@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string.h>
+
 #define ll long long
 
 void Init()
@@ -10,8 +11,8 @@ void Init()
 
 const int MAX = 100 + 1;
 
-int data[MAX];
 ll DP[MAX], result[MAX];
+int data[MAX];
 int N, M;
 
 int main()
