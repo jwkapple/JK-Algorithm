@@ -38,6 +38,7 @@ int Add(int value)
 
 	return L * R;
 }
+
 int func()
 {
 	int max = 0;
@@ -47,7 +48,7 @@ int func()
 		{
 			visited[i] = true;
 			int current = Add(i) + func();
-
+			visited[i] = false;
 			max = max > current ? max : current;
 		}
 	}
