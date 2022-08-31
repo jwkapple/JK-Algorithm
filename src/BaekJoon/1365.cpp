@@ -20,6 +20,7 @@ int find(int left, int right, int value)
 		if (data[left] < value) return right;
 		else return left;
 	}
+
 	int mid = (left + right) / 2;
 
 	if (value <= data[mid]) return find(left, mid, value);
@@ -38,10 +39,7 @@ int main()
 	{
 		std::cin >> tmp;
 		if (tmp > data[cur]) data[++cur] = tmp;
-		else
-		{
-			data[find(0, cur, tmp)] = tmp;
-		}
+		else data[find(0, cur, tmp)] = tmp;
 	}
 
 	std::cout << N - cur;
