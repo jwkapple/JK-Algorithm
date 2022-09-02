@@ -25,15 +25,8 @@ int func(int cur, int num)
 	if (ret)
 		return ret;
 
-	int on = 0, off = 0;
-
-	for (int i = 0; i < X; ++i)
-	{
-		on += data[cur + i];
-	}
-
-	on += func(cur + X, num + 1);
-	off = func(cur + 1, num);
+	int on = func(cur + X, num + 1) + data[cur + X - 1] - data[cur - 1];
+	int off = func(cur + 1, num);
 
 	return ret = on > off ? on : off;
 }
@@ -44,9 +37,13 @@ int main()
 
 	std::cin >> N;
 
-	for (int i = 0; i < N; ++i)
+	std::cin >> data[0];
+
+	for (int i = 1; i < N; ++i)
 	{
 		std::cin >> data[i];
+
+		data[i] += data[i - 1];
 	}
 
 	std::cin >> X;
