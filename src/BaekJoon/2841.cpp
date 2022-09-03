@@ -7,12 +7,12 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-std::stack<int> Gt[7];
+std::stack<int> data[7];
 int N, P, result = 0;
 
 void func(int x, int y)
 {
-	auto& cur = Gt[x];
+	auto& cur = data[x];
 
 	while (!cur.empty() && cur.top() >= y)
 	{
