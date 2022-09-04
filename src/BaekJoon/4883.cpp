@@ -1,9 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <queue>
-
-#define ll long long
-#define pii std::pair<int, int>
 
 void Init()
 {
@@ -12,98 +8,107 @@ void Init()
 	std::cout.tie(NULL);
 }
 
-struct Node
-{
-	ll Value;
-	int Y;
-	int X;
-
-	Node(){};
-	Node(ll v, int y, int x) : Value(v), Y(y), X(x){};
-};
-
-bool operator>(Node L, Node R) { return L.Value > R.Value; }
-
 const int MAX = 1e5 + 1;
+const int IMP = 1e8;
+std::vector<int> result;
+int data[MAX][4], DP[MAX][4];
+int N, T;
+int func(int y, int x);
 
-std::vector<pii> path[3];
-std::vector<ll> result;
-int visited[MAX][4];
-int data[MAX][4];
-int T;
-
-void init()
+int calc(int y, int x)
 {
-	path[0].push_back(pii(1, 0));
-	path[0].push_back(pii(0, 1));
-	path[0].push_back(pii(1, 1));
-	path[1].push_back(pii(1, -1));
-	path[1].push_back(pii(1, 0));
-	path[1].push_back(pii(0, 1));
-	path[1].push_back(pii(1, 1));
-	path[2].push_back(pii(1, 0));
-	path[2].push_back(pii(1, -1));
+	return data[y][x] + func(y, x);
+}
+
+int func(int y, int x)
+{
+	if (y == N)
+	{
+		switch (x)
+		{
+		case 1:
+		{
+			return data[y][2];
+		}
+
+		case 2:
+		{
+			return 0;
+		}
+
+		case 3:
+		{
+			return IMP;
+		}
+		}
+	}
+
+	auto &ret = DP[y][x];
+
+	if (ret)
+		return ret;
+
+	int min, L, M, R;
+	switch (x)
+	{
+	case 1:
+	{
+		L = calc(y + 1, x);
+		M = calc(y + 1, x + 1);
+		R = calc(y, x + 1);
+		break;
+	}
+
+	case 2:
+	{
+		L = calc(y + 1, x + 1);
+		M = calc(y + 1, x - 1);
+		R = calc(y + 1, x);
+		break;
+	}
+
+	case 3:
+	{
+		L = calc(y + 1, x - 1);
+		M = calc(y + 1, x);
+		R = IMP;
+		break;
+	}
+	}
+
+	L = L > M ? M : L;
+	L = L > R ? R : L;
+
+	return ret = L;
 }
 
 int main()
 {
 	Init();
 
-	init();
+	std::cin >> N;
 
-	std::cin >> T;
-
-	while (T)
+	while (N)
 	{
-
-		for (int y = 1; y <= T; ++y)
+		for (int y = 1; y <= N; ++y)
 		{
 			for (int x = 1; x <= 3; ++x)
 			{
 				std::cin >> data[y][x];
-				visited[y][x] = 1e9;
 			}
 		}
 
-		std::priority_queue<Node, std::vector<Node>, std::greater<Node>> Q;
+		result.push_back(func(2, 1));
 
-		Q.push(Node(data[1][2], 1, 2));
-
-		while (!Q.empty())
+		for (int y = 1; y <= N; ++y)
 		{
-			auto [value, y, x] = Q.top();
-			Q.pop();
-			if (y == T && x == 2)
+			for (int x = 1; x <= 3; ++x)
 			{
-				result.push_back(value);
-				break;
-			}
-
-			if (visited[y][x] < value)
-				continue;
-
-			visited[y][x] = value;
-
-			ll nValue;
-			for (auto p : path[x - 1])
-			{
-				auto [Y, X] = p;
-
-				Y += y;
-				X += x;
-
-				if (Y > T)
-					continue;
-				nValue = value + data[Y][X];
-
-				if (visited[Y][X] <= nValue)
-					continue;
-
-				Q.push(Node(nValue, Y, X));
+				DP[y][x] = 0;
 			}
 		}
 
-		std::cin >> T;
+		std::cin >> N;
 	}
 
 	for (int i = 0; i < result.size(); ++i)
