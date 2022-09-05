@@ -1,8 +1,9 @@
 #include <iostream>
-#include <queue>
 #include <vector>
+#include <queue>
 
 #define pii std::pair<int, int>
+
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
@@ -38,6 +39,7 @@ bool func(int y, int x)
 
 	return total >= 2;
 }
+
 bool check(int y, int x)
 {
 	return (y > 0 && y <= N && x > 0 && x <= M);
@@ -67,6 +69,7 @@ void path(int y, int x)
 		}
 	}
 }
+
 int main()
 {
 	Init();
