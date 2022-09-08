@@ -118,7 +118,7 @@ int main()
 
 	for (int i = 1; i <= N; ++i)
 	{
-		if (parent[i] != 1)
+		if (find(i) != 1)
 		{
 			std::cout << -1;
 			return 0;
