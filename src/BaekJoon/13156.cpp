@@ -7,10 +7,9 @@ void Init()
 	std::cin.tie(NULL); std::cout.tie(NULL);
 }
 
-const int MAX = 101;
+const int MAX = 100 + 1;
 
-int data[MAX][MAX]; // [seller][CPU]
-int dp[MAX][MAX];
+int data[MAX][MAX], DP[MAX][MAX];
 int C, M;
 
 int func(int y, int x)
@@ -18,7 +17,7 @@ int func(int y, int x)
 	int result = 0;
 	for (int i = 0; i <= x; ++i)
 	{
-		result = std::max(result, data[y][i] + dp[y - 1][x - i]);
+		result = std::max(result, data[y][i] + DP[y - 1][x - i]);
 	}
 
 	return result;
@@ -43,9 +42,9 @@ int main()
 	{
 		for (int x = 1; x <= C; ++x)
 		{
-			dp[y][x] = func(y, x);
+			DP[y][x] = func(y, x);
 		}
 	}
 
-	std::cout << dp[M][C];
+	std::cout << DP[M][C];
 }
