@@ -12,7 +12,7 @@ void Init()
 }
 
 std::priority_queue<pii, std::vector<pii>, std::greater<pii>> Q;
-int N, result = -1;
+int N, result = 0;
 
 int ready(int time, bool isEnd)
 {
@@ -46,7 +46,7 @@ int func(int current, int prev)
 		cMin += 60;
 	}
 
-	return (cHour - pHour) * 100 + cMin - pMin;
+	return (cHour - pHour) * 60 + cMin - pMin;
 }
 
 int main()
