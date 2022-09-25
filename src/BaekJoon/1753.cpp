@@ -39,8 +39,7 @@ void func(int num)
 		} while (value >= dij[cur] && !Q.empty());
 
 		dij[cur] = value;
-		if (cur == to)
-			return;
+		if (cur == to) return;
 
 		for (auto p : path[cur])
 		{
