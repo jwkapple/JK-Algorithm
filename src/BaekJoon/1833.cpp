@@ -37,6 +37,7 @@ int find(int A)
 
 	return ret = find(ret);
 }
+
 void merge(int A, int B)
 {
 	A = find(A);
@@ -45,6 +46,7 @@ void merge(int A, int B)
 	if (A < B) parent[B] = A;
 	else parent[A] = B;
 }
+
 int main()
 {
 	Init();
