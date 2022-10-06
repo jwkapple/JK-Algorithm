@@ -1,18 +1,20 @@
 #include <iostream>
-#include <climits>
+#include <vector>
+#include <queue>
+
+#define pii std::pair<int, int>
 
 void Init()
 {
 	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL); std::cout.tie(NULL);
+	std::cin.tie(NULL);
+	std::cout.tie(NULL);
 }
 
 const int MAX = 1e5 + 1;
 
 int data[MAX];
-
-int left = 0, right = 0;
-int N, S, result = INT_MAX;
+int N, S, result = 1e9;
 
 int main()
 {
@@ -20,46 +22,31 @@ int main()
 
 	std::cin >> N >> S;
 
-	for (int i = 0; i < N; ++i)
+	for (int i = 1; i <= N; ++i)
 	{
 		std::cin >> data[i];
 	}
 
-	int current = data[0], length = 1;
-	while (left != N)
+	int L = 1, R = 1, total = data[1];
+	while (L <= R)
 	{
-		if (right == N - 1)
+		if (total >= S)
 		{
-			if (current >= S)
-			{
-				result = result > length ? length : result;
-				current -= data[left++];
-				length--;
-			}
-			else break;
+			int interval = R - L;
+			result = result < interval ? result : interval;
+			total -= data[L++];
 		}
 		else
 		{
-			if (left == right)
-			{
-				current += data[++right];
-				length++;
-			}
+			if (R == N)
+				break;
 
-			if (current >= S)
-			{
-				result = result > length ? length : result;
-				current -= data[left++];
-				length--;
-			}
-			else
-			{
-				current += data[++right];
-				length++;
-			}
+			total += data[++R];
 		}
 	}
 
-	if (result == INT_MAX) std::cout << 0;
-	else std::cout << result;
+	if (result == 1e9)
+		std::cout << 0;
+	else
+		std::cout << result + 1;
 }
